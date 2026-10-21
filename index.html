@@ -848,12 +848,12 @@
             },
             {
               id: "i13",
-              theme: "biaya",
-              title: "Rincian biaya dijelaskan di awal",
+              theme: "komitmen",
+              title: "Kemitraan dan Tata Tertib Sekolah",
               detail:
-                "Komponen biaya disampaikan saat pendaftaran dan bisa ditanyakan langsung ke sekolah.",
-              verified: false,
-              source: "",
+                "SD Anak Saleh mengutamakan sinergi positif dengan orang tua untuk mendidik anak bersama, mematuhi tata tertib, serta saling menjaga nama baik sekolah baik di lingkungan nyata maupun media sosial.",
+              verified: true,
+              source: "Pedoman Kemitraan SD Anak Saleh",
             },
           ],
         };
@@ -986,18 +986,27 @@
             ],
           },
           {
-            id: "biaya",
-            label: "Biaya dan administrasi",
+            id: "komitmen",
+            label: "Komitmen dan tata tertib",
             kw: [
-              "biaya",
-              "mahal",
-              "terjangkau",
-              "spp",
-              "uang",
-              "administrasi",
-              "transparan",
-              "cicil",
-              "murah",
+              "komitmen",
+              "tata tertib",
+              "aturan",
+              "nama baik",
+              "media sosial",
+              "sosmed",
+              "medsos",
+              "kerja sama",
+              "kerjasama",
+              "sinergi",
+              "mematuhi",
+              "patuh",
+              "mendukung",
+              "kebijakan",
+              "tata-tertib",
+              "bersedia",
+              "siap",
+              "setuju",
             ],
           },
           {
@@ -1062,7 +1071,7 @@
               "Lokasinya dekat rumah",
               "Sekolah unggul di bidang agama",
               "Melihat karakter anak alumni",
-              "Biayanya terjangkau",
+              "Visi dan komitmen sekolah yang kuat",
             ],
           },
           {
@@ -1093,20 +1102,20 @@
             concern: true,
             chips: [
               "Khawatir anak sulit beradaptasi",
-              "Khawatir soal biaya",
+              "Penyesuaian tata tertib dan aturan sekolah",
               "Khawatir pergaulan dan perundungan",
               "Jarak dari rumah cukup jauh",
               "Khawatir beban belajar terlalu berat",
             ],
           },
           {
-            q: "Bagaimana {S} ingin terlibat dalam perjalanan belajar {A}?",
-            hint: "Kalimat penutup yang baik. Tanyakan cara komunikasi yang {S} sukai dan waktu yang tersedia.",
+            q: "Sebagai calon wali murid SD Anak Saleh, bagaimana komitmen {S} untuk bekerja sama dengan sekolah dalam mendidik anak, mematuhi tata tertib, serta menjaga nama baik sekolah, baik di lingkungan nyata maupun di media sosial?",
+            hint: "Dengarkan komitmen {S} dalam bekerja sama dengan sekolah, mematuhi tata tertib, serta saling menjaga nama baik di dunia nyata dan media sosial.",
             chips: [
-              "Ingin dapat laporan perkembangan rutin",
-              "Ingin ikut kegiatan parenting",
-              "Ingin berkomunikasi langsung dengan guru",
-              "Ingin ikut mendampingi kegiatan sekolah",
+              "Siap berkomitmen penuh dan bekerja sama",
+              "Siap mematuhi seluruh tata tertib sekolah",
+              "Siap menjaga nama baik sekolah di dunia nyata dan medsos",
+              "Mendukung setiap kebijakan dan program sekolah",
             ],
           },
         ];
@@ -1169,7 +1178,21 @@
             var raw = localStorage.getItem(KEY);
             if (raw) {
               var o = JSON.parse(raw);
-              if (o && Array.isArray(o.items)) return o;
+              if (o && Array.isArray(o.items)) {
+                o.items.forEach(function (it) {
+                  if (it.theme === "biaya") {
+                    it.theme = "komitmen";
+                    if (it.title === "Rincian biaya dijelaskan di awal") {
+                      it.title = "Kemitraan dan Tata Tertib Sekolah";
+                      it.detail =
+                        "SD Anak Saleh mengutamakan sinergi positif dengan orang tua untuk mendidik anak bersama, mematuhi tata tertib, serta saling menjaga nama baik sekolah baik di lingkungan nyata maupun media sosial.";
+                      it.verified = true;
+                      it.source = "Pedoman Kemitraan SD Anak Saleh";
+                    }
+                  }
+                });
+                return o;
+              }
             }
           } catch (e) {}
           return JSON.parse(JSON.stringify(DEFAULT_SCHOOL));
