@@ -1,68 +1,587 @@
 [
-  { "id": "SAS-001", "anak": "Muhammad Faiz Al-Fatih", "ortu": "Bunda Sarah Amelia", "sapaan": "Bunda" },
-  { "id": "SAS-002", "anak": "Aisyah Humaira Putri", "ortu": "Ayah Hendra Pratama", "sapaan": "Ayah" },
-  { "id": "SAS-003", "anak": "Rayyan Atharizz Calief", "ortu": "Bunda Dian Kusumawardani", "sapaan": "Bunda" },
-  { "id": "SAS-004", "anak": "Maryam Hanania Zaki", "ortu": "Ayah Bambang Susanto", "sapaan": "Ayah" },
-  { "id": "SAS-005", "anak": "Kenzo Al-Ghifari Ramadhan", "ortu": "Bunda Rini Puspitasari", "sapaan": "Bunda" },
-  { "id": "SAS-006", "anak": "Fatima Azzahra Putri", "ortu": "Ayah Dedy Kurniawan", "sapaan": "Ayah" },
-  { "id": "SAS-007", "anak": "Bilal Al-Habasyi", "ortu": "Bunda Siti Nurhaliza", "sapaan": "Bunda" },
-  { "id": "SAS-008", "anak": "Khansa Nabila Syakira", "ortu": "Bunda Maya Anggraini", "sapaan": "Bunda" },
-  { "id": "SAS-009", "anak": "Ahmad Zaki Mubarak", "ortu": "Ayah Eko Wahyudi", "sapaan": "Ayah" },
-  { "id": "SAS-010", "anak": "Naura Asyila Rahma", "ortu": "Bunda Indah Permata", "sapaan": "Bunda" },
-  { "id": "SAS-011", "anak": "Umar Ibnu Khattab", "ortu": "Ayah Arif Rahman", "sapaan": "Ayah" },
-  { "id": "SAS-012", "anak": "Safiyya Almahyra", "ortu": "Bunda Citra Dewi", "sapaan": "Bunda" },
-  { "id": "SAS-013", "anak": "Ibrahim Khalilullah", "ortu": "Ayah Fajar Nugroho", "sapaan": "Ayah" },
-  { "id": "SAS-014", "anak": "Hafshah Hafizhatunnisa", "ortu": "Bunda Desi Ratnasari", "sapaan": "Bunda" },
-  { "id": "SAS-015", "anak": "Ali Zainal Abidin", "ortu": "Ayah Rahmat Hidayat", "sapaan": "Ayah" },
-  { "id": "SAS-016", "anak": "Salma Aqila Zahra", "ortu": "Bunda Tri Wahyuni", "sapaan": "Bunda" },
-  { "id": "SAS-017", "anak": "Hasan Al-Basri", "ortu": "Ayah Agus Setiawan", "sapaan": "Ayah" },
-  { "id": "SAS-018", "anak": "Husna Kamilah", "ortu": "Bunda Winda Astuti", "sapaan": "Bunda" },
-  { "id": "SAS-019", "anak": "Zubair Ibnu Awwam", "ortu": "Ayah Danang Prasetyo", "sapaan": "Ayah" },
-  { "id": "SAS-020", "anak": "Zahra Salsabila", "ortu": "Bunda Fitriani", "sapaan": "Bunda" },
-  { "id": "SAS-021", "anak": "Tariq Ziyad", "ortu": "Ayah Irwan Syahputra", "sapaan": "Ayah" },
-  { "id": "SAS-022", "anak": "Ruqayyah Binti Rasulullah", "ortu": "Bunda Novita Sari", "sapaan": "Bunda" },
-  { "id": "SAS-023", "anak": "Khalid Ibnu Walid", "ortu": "Ayah Surya Darmawan", "sapaan": "Ayah" },
-  { "id": "SAS-024", "anak": "Ummu Salamah Putri", "ortu": "Bunda Anita Rahayu", "sapaan": "Bunda" },
-  { "id": "SAS-025", "anak": "Salman Al-Farisi", "ortu": "Ayah Yudha Pratama", "sapaan": "Ayah" },
-  { "id": "SAS-026", "anak": "Asiyah Khairunnisa", "ortu": "Bunda Melati Sukma", "sapaan": "Bunda" },
-  { "id": "SAS-027", "anak": "Zaid Ibnu Haritsah", "ortu": "Ayah Budi Santoso", "sapaan": "Ayah" },
-  { "id": "SAS-028", "anak": "Juwayriyah Al-Adawiyah", "ortu": "Bunda Erna Marlina", "sapaan": "Bunda" },
-  { "id": "SAS-029", "anak": "Sa'ad Ibnu Abi Waqqash", "ortu": "Ayah Rudi Hartono", "sapaan": "Ayah" },
-  { "id": "SAS-030", "anak": "Atikah Qurratu A'yun", "ortu": "Bunda Lestari Ningsih", "sapaan": "Bunda" },
-  { "id": "SAS-031", "anak": "Hamzah Asadullah", "ortu": "Ayah Wisnu Wardhana", "sapaan": "Ayah" },
-  { "id": "SAS-032", "anak": "Sumayyah Ummu Ammar", "ortu": "Bunda Dewi Sartika", "sapaan": "Bunda" },
-  { "id": "SAS-033", "anak": "Abdullah Ibnu Abbas", "ortu": "Ayah Joko Widodo", "sapaan": "Ayah" },
-  { "id": "SAS-034", "anak": "Maimunah Nurul Izzah", "ortu": "Bunda Ratna Sari", "sapaan": "Bunda" },
-  { "id": "SAS-035", "anak": "Ja'far Ibnu Abi Thalib", "ortu": "Ayah Teguh Wibowo", "sapaan": "Ayah" },
-  { "id": "SAS-036", "anak": "Barakah Ummu Aiman", "ortu": "Bunda Nurul Hidayah", "sapaan": "Bunda" },
-  { "id": "SAS-037", "anak": "Talhah Ubaidillah", "ortu": "Ayah Bayu Wicaksono", "sapaan": "Ayah" },
-  { "id": "SAS-038", "anak": "Nusaibah Binti Ka'ab", "ortu": "Bunda Sri Mulyani", "sapaan": "Bunda" },
-  { "id": "SAS-039", "anak": "Abu Ubaidah Al-Jarrah", "ortu": "Ayah Agung Prasetya", "sapaan": "Ayah" },
-  { "id": "SAS-040", "anak": "Halimah As-Sa'diyah", "ortu": "Bunda Rina Marlina", "sapaan": "Bunda" },
-  { "id": "SAS-041", "anak": "Usamah Ibnu Zaid", "ortu": "Ayah Dimas Aditya", "sapaan": "Ayah" },
-  { "id": "SAS-042", "anak": "Khadijah Al-Kubra", "ortu": "Bunda Yuli Astuti", "sapaan": "Bunda" },
-  { "id": "SAS-043", "anak": "Mu'adz Ibnu Jabal", "ortu": "Ayah Faisal Basri", "sapaan": "Ayah" },
-  { "id": "SAS-044", "anak": "Amina Az-Zahra", "ortu": "Bunda Farida Aryani", "sapaan": "Bunda" },
-  { "id": "SAS-045", "anak": "Amr Ibnu Ash", "ortu": "Ayah Gunawan Wibisono", "sapaan": "Ayah" },
-  { "id": "SAS-046", "anak": "Laila Majnunah", "ortu": "Bunda Hesti Purwanti", "sapaan": "Bunda" },
-  { "id": "SAS-047", "anak": "Syabil Al-Farizi", "ortu": "Ayah Haris Munandar", "sapaan": "Ayah" },
-  { "id": "SAS-048", "anak": "Yasmin Mumtazah", "ortu": "Bunda Irma Suryani", "sapaan": "Bunda" },
-  { "id": "SAS-049", "anak": "Fatih Al-Ayyubi", "ortu": "Ayah Kusuma Wijaya", "sapaan": "Ayah" },
-  { "id": "SAS-050", "anak": "Zalfa Nafeesa", "ortu": "Bunda Lina Herlina", "sapaan": "Bunda" },
-  { "id": "SAS-051", "anak": "Izzan Al-Ghazy", "ortu": "Ayah Lukman Hakim", "sapaan": "Ayah" },
-  { "id": "SAS-052", "anak": "Nadhira Syifa", "ortu": "Bunda Mega Utami", "sapaan": "Bunda" },
-  { "id": "SAS-053", "anak": "Danish Al-Hafiz", "ortu": "Ayah Maulana Malik", "sapaan": "Ayah" },
-  { "id": "SAS-054", "anak": "Syakira Qalbi", "ortu": "Bunda Nabila Syarif", "sapaan": "Bunda" },
-  { "id": "SAS-055", "anak": "Athar Rayyan Pratama", "ortu": "Ayah Oki Setiawan", "sapaan": "Ayah" },
-  { "id": "SAS-056", "anak": "Rania Al-Kautsar", "ortu": "Bunda Putri Ayu", "sapaan": "Bunda" },
-  { "id": "SAS-057", "anak": "Gibran Al-Farisi", "ortu": "Ayah Qomaruddin", "sapaan": "Ayah" },
-  { "id": "SAS-058", "anak": "Anindita Khairani", "ortu": "Bunda Restu Amalia", "sapaan": "Bunda" },
-  { "id": "SAS-059", "anak": "Arkan Danendra", "ortu": "Ayah Sigit Purnomo", "sapaan": "Ayah" },
-  { "id": "SAS-060", "anak": "Alula Salsabila", "ortu": "Bunda Tika Kartika", "sapaan": "Bunda" },
-  { "id": "SAS-061", "anak": "Faizan Al-Mubarak", "ortu": "Ayah Usman Effendi", "sapaan": "Ayah" },
-  { "id": "SAS-062", "anak": "Dhiyaulhaq Safira", "ortu": "Bunda Vina Panduwinata", "sapaan": "Bunda" },
-  { "id": "SAS-063", "anak": "Haikal Musyaffa", "ortu": "Ayah Wahyu Ramadhan", "sapaan": "Ayah" },
-  { "id": "SAS-064", "anak": "Zalika Putri Ramadhani", "ortu": "Bunda Yayuk Rahmawati", "sapaan": "Bunda" },
-  { "id": "SAS-065", "anak": "Zayyan Akhdan", "ortu": "Ayah Zainal Arifin", "sapaan": "Ayah" }
+  {
+    "id": "SAS-001",
+    "anak": "Muhammad Faiz Al-Fatih",
+    "ayah": "Ahmad Fauzi",
+    "ibu": "Sarah Amelia",
+    "ortu": "Ayah Ahmad Fauzi & Bunda Sarah Amelia",
+    "alamat": "Jl. Arumba No. 15, Tunggulwulung, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-002",
+    "anak": "Aisyah Humaira Putri",
+    "ayah": "Hendra Pratama",
+    "ibu": "Dian Kusumawardani",
+    "ortu": "Ayah Hendra Pratama & Bunda Dian Kusumawardani",
+    "alamat": "Jl. Candi Mendut Barat No. 8, Mojolangu, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-003",
+    "anak": "Rayyan Atharizz Calief",
+    "ayah": "Bambang Susanto",
+    "ibu": "Dian Kusumawardani",
+    "ortu": "Ayah Bambang Susanto & Bunda Dian Kusumawardani",
+    "alamat": "Jl. Soekarno Hatta No. 42, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-004",
+    "anak": "Maryam Hanania Zaki",
+    "ayah": "Bambang Susanto",
+    "ibu": "Siti Nurhaliza",
+    "ortu": "Ayah Bambang Susanto & Bunda Siti Nurhaliza",
+    "alamat": "Jl. Bunga Coklat No. 19, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-005",
+    "anak": "Kenzo Al-Ghifari Ramadhan",
+    "ayah": "Eko Wahyudi",
+    "ibu": "Rini Puspitasari",
+    "ortu": "Ayah Eko Wahyudi & Bunda Rini Puspitasari",
+    "alamat": "Perum Griya Shanta Blok E-14, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-006",
+    "anak": "Fatima Azzahra Putri",
+    "ayah": "Dedy Kurniawan",
+    "ibu": "Indah Permata",
+    "ortu": "Ayah Dedy Kurniawan & Bunda Indah Permata",
+    "alamat": "Jl. Vinolia No. 27, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-007",
+    "anak": "Bilal Al-Habasyi",
+    "ayah": "Fajar Nugroho",
+    "ibu": "Siti Nurhaliza",
+    "ortu": "Ayah Fajar Nugroho & Bunda Siti Nurhaliza",
+    "alamat": "Jl. Saxophone No. 33, Tunggulwulung, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-008",
+    "anak": "Khansa Nabila Syakira",
+    "ayah": "Rahmat Hidayat",
+    "ibu": "Maya Anggraini",
+    "ortu": "Ayah Rahmat Hidayat & Bunda Maya Anggraini",
+    "alamat": "Jl. Terusan Cikampek No. 5, Penanggungan, Klojen, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-009",
+    "anak": "Ahmad Zaki Mubarak",
+    "ayah": "Eko Wahyudi",
+    "ibu": "Tri Wahyuni",
+    "ortu": "Ayah Eko Wahyudi & Bunda Tri Wahyuni",
+    "alamat": "Jl. Simpang Borobudur No. 12, Mojolangu, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-010",
+    "anak": "Naura Asyila Rahma",
+    "ayah": "Danang Prasetyo",
+    "ibu": "Indah Permata",
+    "ortu": "Ayah Danang Prasetyo & Bunda Indah Permata",
+    "alamat": "Jl. Kalpataru No. 45, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-011",
+    "anak": "Umar Ibnu Khattab",
+    "ayah": "Arif Rahman",
+    "ibu": "Fitriani",
+    "ortu": "Ayah Arif Rahman & Bunda Fitriani",
+    "alamat": "Perum Permata Jingga Blok AA-05, Tunggulwulung, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-012",
+    "anak": "Safiyya Almahyra",
+    "ayah": "Surya Darmawan",
+    "ibu": "Citra Dewi",
+    "ortu": "Ayah Surya Darmawan & Bunda Citra Dewi",
+    "alamat": "Jl. Ikan Piranha Atas No. 22, Tunjungsekar, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-013",
+    "anak": "Ibrahim Khalilullah",
+    "ayah": "Fajar Nugroho",
+    "ibu": "Anita Rahayu",
+    "ortu": "Ayah Fajar Nugroho & Bunda Anita Rahayu",
+    "alamat": "Jl. Akordion No. 18, Tunggulwulung, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-014",
+    "anak": "Hafshah Hafizhatunnisa",
+    "ayah": "Budi Santoso",
+    "ibu": "Desi Ratnasari",
+    "ortu": "Ayah Budi Santoso & Bunda Desi Ratnasari",
+    "alamat": "Jl. Danau Toba No. G3-11, Sawojajar, Kedungkandang, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-015",
+    "anak": "Ali Zainal Abidin",
+    "ayah": "Rahmat Hidayat",
+    "ibu": "Erna Marlina",
+    "ortu": "Ayah Rahmat Hidayat & Bunda Erna Marlina",
+    "alamat": "Jl. Candi Panggung No. 67, Mojolangu, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-016",
+    "anak": "Salma Aqila Zahra",
+    "ayah": "Wisnu Wardhana",
+    "ibu": "Tri Wahyuni",
+    "ortu": "Ayah Wisnu Wardhana & Bunda Tri Wahyuni",
+    "alamat": "Jl. MT Haryono Gg. XIX No. 10, Dinoyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-017",
+    "anak": "Hasan Al-Basri",
+    "ayah": "Agus Setiawan",
+    "ibu": "Dewi Sartika",
+    "ortu": "Ayah Agus Setiawan & Bunda Dewi Sartika",
+    "alamat": "Jl. Sigura-gura No. 24, Karangbesuki, Sukun, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-018",
+    "anak": "Husna Kamilah",
+    "ayah": "Teguh Wibowo",
+    "ibu": "Winda Astuti",
+    "ortu": "Ayah Teguh Wibowo & Bunda Winda Astuti",
+    "alamat": "Jl. Bendungan Sigura-gura No. 31, Sumbersari, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-019",
+    "anak": "Zubair Ibnu Awwam",
+    "ayah": "Danang Prasetyo",
+    "ibu": "Nurul Hidayah",
+    "ortu": "Ayah Danang Prasetyo & Bunda Nurul Hidayah",
+    "alamat": "Jl. Semanggi Timur No. 17, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-020",
+    "anak": "Zahra Salsabila",
+    "ayah": "Agung Prasetya",
+    "ibu": "Fitriani",
+    "ortu": "Ayah Agung Prasetya & Bunda Fitriani",
+    "alamat": "Jl. Raya Tlogomas No. 88, Tlogomas, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-021",
+    "anak": "Tariq Ziyad",
+    "ayah": "Irwan Syahputra",
+    "ibu": "Rina Marlina",
+    "ortu": "Ayah Irwan Syahputra & Bunda Rina Marlina",
+    "alamat": "Perum Villa Puncak Tidar Blok N-09, Dau, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-022",
+    "anak": "Ruqayyah Binti Rasulullah",
+    "ayah": "Faisal Basri",
+    "ibu": "Novita Sari",
+    "ortu": "Ayah Faisal Basri & Bunda Novita Sari",
+    "alamat": "Jl. Terusan Dieng No. 50, Pisangcandi, Sukun, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-023",
+    "anak": "Khalid Ibnu Walid",
+    "ayah": "Surya Darmawan",
+    "ibu": "Farida Aryani",
+    "ortu": "Ayah Surya Darmawan & Bunda Farida Aryani",
+    "alamat": "Jl. Galunggung No. 14, Gading Kasri, Klojen, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-024",
+    "anak": "Ummu Salamah Putri",
+    "ayah": "Haris Munandar",
+    "ibu": "Anita Rahayu",
+    "ortu": "Ayah Haris Munandar & Bunda Anita Rahayu",
+    "alamat": "Jl. Jakarta No. 35, Penanggungan, Klojen, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-025",
+    "anak": "Salman Al-Farisi",
+    "ayah": "Yudha Pratama",
+    "ibu": "Irma Suryani",
+    "ortu": "Ayah Yudha Pratama & Bunda Irma Suryani",
+    "alamat": "Jl. Bandung No. 10, Penanggungan, Klojen, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-026",
+    "anak": "Asiyah Khairunnisa",
+    "ayah": "Lukman Hakim",
+    "ibu": "Melati Sukma",
+    "ortu": "Ayah Lukman Hakim & Bunda Melati Sukma",
+    "alamat": "Jl. Arumba No. 15, Tunggulwulung, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-027",
+    "anak": "Zaid Ibnu Haritsah",
+    "ayah": "Budi Santoso",
+    "ibu": "Mega Utami",
+    "ortu": "Ayah Budi Santoso & Bunda Mega Utami",
+    "alamat": "Jl. Candi Mendut Barat No. 8, Mojolangu, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-028",
+    "anak": "Juwayriyah Al-Adawiyah",
+    "ayah": "Oki Setiawan",
+    "ibu": "Erna Marlina",
+    "ortu": "Ayah Oki Setiawan & Bunda Erna Marlina",
+    "alamat": "Jl. Soekarno Hatta No. 42, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-029",
+    "anak": "Sa'ad Ibnu Abi Waqqash",
+    "ayah": "Rudi Hartono",
+    "ibu": "Putri Ayu",
+    "ortu": "Ayah Rudi Hartono & Bunda Putri Ayu",
+    "alamat": "Jl. Bunga Coklat No. 19, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-030",
+    "anak": "Atikah Qurratu A'yun",
+    "ayah": "Sigit Purnomo",
+    "ibu": "Lestari Ningsih",
+    "ortu": "Ayah Sigit Purnomo & Bunda Lestari Ningsih",
+    "alamat": "Perum Griya Shanta Blok E-14, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-031",
+    "anak": "Hamzah Asadullah",
+    "ayah": "Wisnu Wardhana",
+    "ibu": "Tika Kartika",
+    "ortu": "Ayah Wisnu Wardhana & Bunda Tika Kartika",
+    "alamat": "Jl. Vinolia No. 27, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-032",
+    "anak": "Sumayyah Ummu Ammar",
+    "ayah": "Wahyu Ramadhan",
+    "ibu": "Dewi Sartika",
+    "ortu": "Ayah Wahyu Ramadhan & Bunda Dewi Sartika",
+    "alamat": "Jl. Saxophone No. 33, Tunggulwulung, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-033",
+    "anak": "Abdullah Ibnu Abbas",
+    "ayah": "Joko Widodo",
+    "ibu": "Yayuk Rahmawati",
+    "ortu": "Ayah Joko Widodo & Bunda Yayuk Rahmawati",
+    "alamat": "Jl. Terusan Cikampek No. 5, Penanggungan, Klojen, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-034",
+    "anak": "Maimunah Nurul Izzah",
+    "ayah": "Rizky Ramadhan",
+    "ibu": "Ratna Sari",
+    "ortu": "Ayah Rizky Ramadhan & Bunda Ratna Sari",
+    "alamat": "Jl. Simpang Borobudur No. 12, Mojolangu, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-035",
+    "anak": "Ja'far Ibnu Abi Thalib",
+    "ayah": "Teguh Wibowo",
+    "ibu": "Ayu Lestari",
+    "ortu": "Ayah Teguh Wibowo & Bunda Ayu Lestari",
+    "alamat": "Jl. Kalpataru No. 45, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-036",
+    "anak": "Barakah Ummu Aiman",
+    "ayah": "Ahmad Fauzi",
+    "ibu": "Nurul Hidayah",
+    "ortu": "Ayah Ahmad Fauzi & Bunda Nurul Hidayah",
+    "alamat": "Perum Permata Jingga Blok AA-05, Tunggulwulung, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-037",
+    "anak": "Talhah Ubaidillah",
+    "ayah": "Bayu Wicaksono",
+    "ibu": "Dian Kusumawardani",
+    "ortu": "Ayah Bayu Wicaksono & Bunda Dian Kusumawardani",
+    "alamat": "Jl. Ikan Piranha Atas No. 22, Tunjungsekar, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-038",
+    "anak": "Nusaibah Binti Ka'ab",
+    "ayah": "Bambang Susanto",
+    "ibu": "Sri Mulyani",
+    "ortu": "Ayah Bambang Susanto & Bunda Sri Mulyani",
+    "alamat": "Jl. Akordion No. 18, Tunggulwulung, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-039",
+    "anak": "Abu Ubaidah Al-Jarrah",
+    "ayah": "Agung Prasetya",
+    "ibu": "Siti Nurhaliza",
+    "ortu": "Ayah Agung Prasetya & Bunda Siti Nurhaliza",
+    "alamat": "Jl. Danau Toba No. G3-11, Sawojajar, Kedungkandang, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-040",
+    "anak": "Halimah As-Sa'diyah",
+    "ayah": "Eko Wahyudi",
+    "ibu": "Rina Marlina",
+    "ortu": "Ayah Eko Wahyudi & Bunda Rina Marlina",
+    "alamat": "Jl. Candi Panggung No. 67, Mojolangu, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-041",
+    "anak": "Usamah Ibnu Zaid",
+    "ayah": "Dimas Aditya",
+    "ibu": "Indah Permata",
+    "ortu": "Ayah Dimas Aditya & Bunda Indah Permata",
+    "alamat": "Jl. MT Haryono Gg. XIX No. 10, Dinoyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-042",
+    "anak": "Khadijah Al-Kubra",
+    "ayah": "Fajar Nugroho",
+    "ibu": "Yuli Astuti",
+    "ortu": "Ayah Fajar Nugroho & Bunda Yuli Astuti",
+    "alamat": "Jl. Sigura-gura No. 24, Karangbesuki, Sukun, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-043",
+    "anak": "Mu'adz Ibnu Jabal",
+    "ayah": "Faisal Basri",
+    "ibu": "Desi Ratnasari",
+    "ortu": "Ayah Faisal Basri & Bunda Desi Ratnasari",
+    "alamat": "Jl. Bendungan Sigura-gura No. 31, Sumbersari, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-044",
+    "anak": "Amina Az-Zahra",
+    "ayah": "Agus Setiawan",
+    "ibu": "Farida Aryani",
+    "ortu": "Ayah Agus Setiawan & Bunda Farida Aryani",
+    "alamat": "Jl. Semanggi Timur No. 17, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-045",
+    "anak": "Amr Ibnu Ash",
+    "ayah": "Gunawan Wibisono",
+    "ibu": "Winda Astuti",
+    "ortu": "Ayah Gunawan Wibisono & Bunda Winda Astuti",
+    "alamat": "Jl. Raya Tlogomas No. 88, Tlogomas, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-046",
+    "anak": "Laila Majnunah",
+    "ayah": "Irwan Syahputra",
+    "ibu": "Hesti Purwanti",
+    "ortu": "Ayah Irwan Syahputra & Bunda Hesti Purwanti",
+    "alamat": "Perum Villa Puncak Tidar Blok N-09, Dau, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-047",
+    "anak": "Syabil Al-Farizi",
+    "ayah": "Haris Munandar",
+    "ibu": "Novita Sari",
+    "ortu": "Ayah Haris Munandar & Bunda Novita Sari",
+    "alamat": "Jl. Terusan Dieng No. 50, Pisangcandi, Sukun, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-048",
+    "anak": "Yasmin Mumtazah",
+    "ayah": "Yudha Pratama",
+    "ibu": "Irma Suryani",
+    "ortu": "Ayah Yudha Pratama & Bunda Irma Suryani",
+    "alamat": "Jl. Galunggung No. 14, Gading Kasri, Klojen, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-049",
+    "anak": "Fatih Al-Ayyubi",
+    "ayah": "Kusuma Wijaya",
+    "ibu": "Melati Sukma",
+    "ortu": "Ayah Kusuma Wijaya & Bunda Melati Sukma",
+    "alamat": "Jl. Jakarta No. 35, Penanggungan, Klojen, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-050",
+    "anak": "Zalfa Nafeesa",
+    "ayah": "Rudi Hartono",
+    "ibu": "Lina Herlina",
+    "ortu": "Ayah Rudi Hartono & Bunda Lina Herlina",
+    "alamat": "Jl. Bandung No. 10, Penanggungan, Klojen, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-051",
+    "anak": "Izzan Al-Ghazy",
+    "ayah": "Lukman Hakim",
+    "ibu": "Lestari Ningsih",
+    "ortu": "Ayah Lukman Hakim & Bunda Lestari Ningsih",
+    "alamat": "Jl. Arumba No. 15, Tunggulwulung, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-052",
+    "anak": "Nadhira Syifa",
+    "ayah": "Joko Widodo",
+    "ibu": "Mega Utami",
+    "ortu": "Ayah Joko Widodo & Bunda Mega Utami",
+    "alamat": "Jl. Candi Mendut Barat No. 8, Mojolangu, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-053",
+    "anak": "Danish Al-Hafiz",
+    "ayah": "Maulana Malik",
+    "ibu": "Ratna Sari",
+    "ortu": "Ayah Maulana Malik & Bunda Ratna Sari",
+    "alamat": "Jl. Soekarno Hatta No. 42, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-054",
+    "anak": "Syakira Qalbi",
+    "ayah": "Bayu Wicaksono",
+    "ibu": "Nabila Syarif",
+    "ortu": "Ayah Bayu Wicaksono & Bunda Nabila Syarif",
+    "alamat": "Jl. Bunga Coklat No. 19, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-055",
+    "anak": "Athar Rayyan Pratama",
+    "ayah": "Oki Setiawan",
+    "ibu": "Sri Mulyani",
+    "ortu": "Ayah Oki Setiawan & Bunda Sri Mulyani",
+    "alamat": "Perum Griya Shanta Blok E-14, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-056",
+    "anak": "Rania Al-Kautsar",
+    "ayah": "Dimas Aditya",
+    "ibu": "Putri Ayu",
+    "ortu": "Ayah Dimas Aditya & Bunda Putri Ayu",
+    "alamat": "Jl. Vinolia No. 27, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-057",
+    "anak": "Gibran Al-Farisi",
+    "ayah": "Qomaruddin",
+    "ibu": "Yuli Astuti",
+    "ortu": "Ayah Qomaruddin & Bunda Yuli Astuti",
+    "alamat": "Jl. Saxophone No. 33, Tunggulwulung, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-058",
+    "anak": "Anindita Khairani",
+    "ayah": "Gunawan Wibisono",
+    "ibu": "Restu Amalia",
+    "ortu": "Ayah Gunawan Wibisono & Bunda Restu Amalia",
+    "alamat": "Jl. Terusan Cikampek No. 5, Penanggungan, Klojen, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-059",
+    "anak": "Arkan Danendra",
+    "ayah": "Sigit Purnomo",
+    "ibu": "Hesti Purwanti",
+    "ortu": "Ayah Sigit Purnomo & Bunda Hesti Purwanti",
+    "alamat": "Jl. Simpang Borobudur No. 12, Mojolangu, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-060",
+    "anak": "Alula Salsabila",
+    "ayah": "Kusuma Wijaya",
+    "ibu": "Tika Kartika",
+    "ortu": "Ayah Kusuma Wijaya & Bunda Tika Kartika",
+    "alamat": "Jl. Kalpataru No. 45, Jatimulyo, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-061",
+    "anak": "Faizan Al-Mubarak",
+    "ayah": "Usman Effendi",
+    "ibu": "Lina Herlina",
+    "ortu": "Ayah Usman Effendi & Bunda Lina Herlina",
+    "alamat": "Perum Permata Jingga Blok AA-05, Tunggulwulung, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-062",
+    "anak": "Dhiyaulhaq Safira",
+    "ayah": "Maulana Malik",
+    "ibu": "Vina Panduwinata",
+    "ortu": "Ayah Maulana Malik & Bunda Vina Panduwinata",
+    "alamat": "Jl. Ikan Piranha Atas No. 22, Tunjungsekar, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-063",
+    "anak": "Haikal Musyaffa",
+    "ayah": "Wahyu Ramadhan",
+    "ibu": "Nabila Syarif",
+    "ortu": "Ayah Wahyu Ramadhan & Bunda Nabila Syarif",
+    "alamat": "Jl. Akordion No. 18, Tunggulwulung, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-064",
+    "anak": "Zalika Putri Ramadhani",
+    "ayah": "Qomaruddin",
+    "ibu": "Yayuk Rahmawati",
+    "ortu": "Ayah Qomaruddin & Bunda Yayuk Rahmawati",
+    "alamat": "Jl. Danau Toba No. G3-11, Sawojajar, Kedungkandang, Malang",
+    "sapaan": "Ayah/Bunda"
+  },
+  {
+    "id": "SAS-065",
+    "anak": "Zayyan Akhdan",
+    "ayah": "Zainal Arifin",
+    "ibu": "Restu Amalia",
+    "ortu": "Ayah Zainal Arifin & Bunda Restu Amalia",
+    "alamat": "Jl. Candi Panggung No. 67, Mojolangu, Lowokwaru, Malang",
+    "sapaan": "Ayah/Bunda"
+  }
 ]
-
