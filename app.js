@@ -430,6 +430,64 @@
 
   /* ---------- State ---------- */
   var KEY_INTERVIEWS = "sas-interviews-v1";
+  var KEY_GEMINI = "sas-gemini-keys-v1";
+
+  function loadGeminiKeys() {
+    try {
+      var raw = localStorage.getItem(KEY_GEMINI);
+      if (raw) {
+        var a = JSON.parse(raw);
+        if (Array.isArray(a)) return a;
+      }
+    } catch (e) {}
+    return [];
+  }
+  function saveGeminiKeys(arr) {
+    try { localStorage.setItem(KEY_GEMINI, JSON.stringify(arr)); } catch (e) {}
+  }
+  function getActiveGeminiKey() {
+    return state.geminiKeys[state.geminiKeyIdx] || "";
+  }
+  async function callGemini(prompt) {
+    var keys = state.geminiKeys.filter(function (k) { return k.trim(); });
+    if (!keys.length) throw new Error("Belum ada API Key yang tersimpan.");
+    var startIdx = state.geminiKeyIdx % keys.length;
+    for (var i = 0; i < keys.length; i++) {
+      var idx = (startIdx + i) % keys.length;
+      var key = keys[idx].trim();
+      var url =
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
+        key;
+      try {
+        var resp = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 800 },
+          }),
+        });
+        if (resp.status === 429) {
+          state.geminiKeyIdx = (idx + 1) % keys.length;
+          continue;
+        }
+        if (!resp.ok) {
+          var errData = await resp.json();
+          throw new Error(
+            (errData.error && errData.error.message) || "Gagal: " + resp.status
+          );
+        }
+        var data = await resp.json();
+        state.geminiKeyIdx = idx;
+        return data.candidates[0].content.parts[0].text;
+      } catch (e) {
+        if (e.message && e.message.indexOf("Gagal") === 0) throw e;
+        // network error – try next key
+      }
+    }
+    throw new Error("Semua API Key sudah mencapai batas kuota. Coba lagi nanti.");
+  }
+
   var state = {
     tab: "interview",
     step: 0,
@@ -451,6 +509,10 @@
     searchQuery: "",
     activeSessionId: null,
     firebaseStatus: "disconnected",
+    geminiKeys: loadGeminiKeys(),
+    geminiKeyIdx: 0,
+    geminiStatus: "idle",
+    geminiMsg: "",
   };
   var lastThemes = {};
 
@@ -1277,6 +1339,34 @@
       '<div class="stack" style="gap:24px"><div class="stack" data-anim="in"><span class="eyebrow">Sumber jawaban penguat</span>' +
       '<h1 class="display result-title">Data sekolah</h1>' +
       '<p class="muted" style="max-width:64ch">Semua penguat di hasil wawancara berasal dari data ini. Perubahan tersimpan otomatis di browser ini saja. Data yang ditandai contoh belum diverifikasi, jadi ganti dengan data resmi sekolah.</p></div>' +
+      '<div class="card" data-anim="in">' +
+      '<div class="row between" style="margin-bottom:12px">' +
+      '<span class="card-title"><i data-lucide="sparkles"></i> Gemini AI – API Keys</span>' +
+      (state.geminiStatus === "ok"
+        ? '<span class="badge ok"><i data-lucide="check-circle-2"></i> Terhubung</span>'
+        : state.geminiStatus === "error"
+        ? '<span class="badge warn"><i data-lucide="alert-triangle"></i> Gagal</span>'
+        : state.geminiStatus === "testing"
+        ? '<span class="badge"><i data-lucide="loader"></i> Menguji…</span>'
+        : '<span class="badge"><i data-lucide="minus"></i> Belum diuji</span>') +
+      '</div>' +
+      '<div class="field"><label for="gemini-keys">API Keys (satu per baris — key teratas = utama, otomatis ganti jika kuota habis)</label>' +
+      '<textarea class="textarea" id="gemini-keys" style="min-height:96px;font-family:monospace;font-size:12px;letter-spacing:0.02em;" placeholder="AIzaSyXXXXXXXXXXXXXXXXXXXX&#10;AIzaSyYYYYYYYYYYYYYYYYYYYY">' +
+      esc(state.geminiKeys.join("\n")) +
+      '</textarea></div>' +
+      (state.geminiMsg
+        ? '<p style="font-size:13px;margin:4px 0 8px;color:' +
+          (state.geminiStatus === "ok" ? "var(--muted)" : "var(--danger)") +
+          '">' + esc(state.geminiMsg) + '</p>'
+        : '') +
+      '<div class="row">' +
+      '<button class="btn btn-primary btn-sm" data-action="save-gemini-keys"><i data-lucide="save"></i> Simpan Keys</button>' +
+      '<button class="btn btn-outline btn-sm" data-action="test-gemini"><i data-lucide="zap"></i> Tes Koneksi</button>' +
+      (state.geminiKeys.length > 1
+        ? '<span class="muted" style="font-size:12px;align-self:center;">Key aktif: #' +
+          (state.geminiKeyIdx + 1) + ' dari ' + state.geminiKeys.length + '</span>'
+        : '') +
+      '</div></div>' +
       '<div class="card" data-anim="in"><div class="card-title">Profil sekolah</div>' +
       '<div class="two">' +
       f("sf-name", "Nama sekolah", "name") +
@@ -1901,6 +1991,40 @@
       state.school = JSON.parse(JSON.stringify(DEFAULT_SCHOOL));
       saveSchool();
       render();
+    } else if (a === "save-gemini-keys") {
+      var ta = $("#gemini-keys");
+      var keys = ta
+        ? ta.value
+            .split("\n")
+            .map(function (k) { return k.trim(); })
+            .filter(Boolean)
+        : [];
+      state.geminiKeys = keys;
+      state.geminiKeyIdx = 0;
+      state.geminiStatus = "idle";
+      state.geminiMsg = keys.length
+        ? keys.length + " key tersimpan."
+        : "Belum ada key.";
+      saveGeminiKeys(keys);
+      render();
+    } else if (a === "test-gemini") {
+      state.geminiStatus = "testing";
+      state.geminiMsg = "Menguji koneksi…";
+      render();
+      callGemini(
+        "Balas dengan satu kalimat singkat dalam bahasa Indonesia bahwa koneksi berhasil."
+      )
+        .then(function (result) {
+          state.geminiStatus = "ok";
+          state.geminiMsg =
+            "Berhasil! Balasan AI: " + result.trim().slice(0, 160);
+          render();
+        })
+        .catch(function (err) {
+          state.geminiStatus = "error";
+          state.geminiMsg = "Gagal: " + (err.message || String(err));
+          render();
+        });
     }
   });
 
