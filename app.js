@@ -4,11 +4,15 @@
   /* ---------- Data sekolah bawaan ---------- */
   var KEY = "sas-school-v1";
   var DEFAULT_SCHOOL = {
+    v: 3,
     name: "Sekolah Anak Saleh",
     level: "Sekolah Dasar",
     address: "Jl. Arumba No. 31, Tunggulwulung, Lowokwaru, Malang",
     phone: "(0341) 487088",
     website: "www.sekolahanaksaleh.sch.id",
+    youtube: "https://youtu.be/Wttuw8v2-ME",
+    instagram: "https://www.instagram.com/sdanaksalehofficial/",
+    instagramHandle: "@sdanaksalehofficial",
     founded: "2014",
     items: [
       {
@@ -59,20 +63,20 @@
       {
         id: "i6",
         theme: "agama",
-        title: "Pembiasaan ibadah harian",
+        title: "Sinkronisasi Pembiasaan Ibadah Harian",
         detail:
-          "Salat berjamaah, doa harian, dan hafalan surat pendek bersama guru.",
-        verified: false,
-        source: "",
+          "Di SD Anak Saleh, para siswa dibiasakan menjaga shalat fardhu tepat waktu, shalat dhuha, dan tadarus Al-Qur'an. Sekolah meminta komitmen orang tua untuk mengawal ibadah ini di rumah secara konsisten agar pembentukan karakter islami berjalan selaras.",
+        verified: true,
+        source: "Pedoman Pembiasaan Ibadah SD Anak Saleh",
       },
       {
         id: "i7",
         theme: "karakter",
-        title: "Penguatan adab sehari-hari",
+        title: "Penegakan Adab & Anti-Bullying (Berkata Kasar)",
         detail:
-          "Adab salam, antre, dan merapikan barang dibiasakan di setiap kelas.",
-        verified: false,
-        source: "",
+          "Sekolah menerapkan aturan ketat mengenai adab: dilarang mengejek (bullying), berkelahi, dan berkata kasar/kotor. Orang tua mendukung dengan menyaring tontonan, game, atau pergaulan di rumah, serta mendukung penuh tindakan disiplin pembinaan dari sekolah.",
+        verified: true,
+        source: "Tata Tertib Penegakan Adab SD Anak Saleh",
       },
       {
         id: "i8",
@@ -86,11 +90,11 @@
       {
         id: "i9",
         theme: "lingkungan",
-        title: "Lingkungan yang aman",
+        title: "Lingkungan Aman & Ramah Anak",
         detail:
-          "Aturan sekolah ramah anak dan penanganan perundungan yang jelas.",
-        verified: false,
-        source: "",
+          "Sekolah menjamin lingkungan yang aman, tertib, dan ramah anak dengan aturan ketat penanganan perundungan (anti-bullying) serta pengawasan aktif di setiap area sekolah.",
+        verified: true,
+        source: "Pedoman Sekolah Ramah Anak SD Anak Saleh",
       },
       {
         id: "i10",
@@ -104,10 +108,11 @@
       {
         id: "i11",
         theme: "keterlibatan",
-        title: "Komunikasi dengan orang tua",
-        detail: "Laporan perkembangan berkala dan pertemuan parenting.",
-        verified: false,
-        source: "",
+        title: "Saluran Resmi Saran dan Kritik",
+        detail:
+          "Sekolah terbuka terhadap masukan demi kemajuan bersama melalui saluran resmi: forum dialog resmi, kontak humas, atau janji temu formal dengan manajemen sekolah. Menghindari pergunjingan di grup WhatsApp umum demi mencegah kesalahpahaman.",
+        verified: true,
+        source: "Pedoman Komunikasi & Humas SD Anak Saleh",
       },
       {
         id: "i12",
@@ -121,11 +126,58 @@
       {
         id: "i13",
         theme: "komitmen",
-        title: "Kemitraan dan Tata Tertib Sekolah",
+        title: "Komitmen Bijak Bersosial Media",
         detail:
-          "SD Anak Saleh mengutamakan sinergi positif dengan orang tua untuk mendidik anak bersama, mematuhi tata tertib, serta saling menjaga nama baik sekolah baik di lingkungan nyata maupun media sosial.",
+          "Sangat menghargai privasi dan nama baik seluruh warga sekolah. Jika terjadi kesalahpahaman, diselesaikan secara internal dan kekeluargaan. Orang tua berkomitmen tidak mengunggah (posting), mengeluhkan, atau memviralkan masalah sekolah ke media sosial.",
         verified: true,
         source: "Pedoman Kemitraan SD Anak Saleh",
+      },
+      {
+        id: "i14",
+        theme: "komitmen",
+        title: "Etika Berpakaian (Dress Code) Antar/Jemput",
+        detail:
+          "Sebagai sekolah Islam, lingkungan sekolah adalah cerminan nilai syariat. Orang tua menjadi teladan dalam berpakaian: wali murid laki-laki berpakaian sopan, celana panjang, dan beralas kaki rapi; wali murid perempuan wajib menutup aurat sempurna dan mengenakan hijab/jilbab syar'i.",
+        verified: true,
+        source: "Tata Tertib Keteladanan SD Anak Saleh",
+      },
+      {
+        id: "i15",
+        theme: "komitmen",
+        title: "Kedisiplinan Kehadiran dan Waktu Pagi",
+        detail:
+          "Keterlambatan sering dipengaruhi ritme pagi di rumah. Orang tua berkomitmen melatih kedisiplinan sejak bangun tidur agar tiba di sekolah tepat waktu sebelum bel berbunyi, sehingga anak tidak tertinggal pembiasaan pagi (zikir/dhuha bersama).",
+        verified: true,
+        source: "Tata Tertib Kehadiran SD Anak Saleh",
+      },
+      {
+        id: "i16",
+        theme: "komitmen",
+        title: "Pembatasan Gadget (Gawai) dan Teknologi",
+        detail:
+          "Siswa dilarang membawa gadget ke sekolah kecuali instruksi guru untuk belajar. Orang tua wajib membatasi dan mengawasi gawai di rumah (misal aturan 'no gadget' magrib hingga isya) demi fokus belajar, kesehatan mata, dan jam istirahat anak.",
+        verified: true,
+        source: "Tata Tertib Penggunaan Gawai SD Anak Saleh",
+      },
+      {
+        id: "i17",
+        theme: "rekomendasi",
+        title: "Video Profil Resmi SD Anak Saleh (YouTube)",
+        detail:
+          "Dokumentasi video profil resmi yang menampilkan lingkungan sekolah ramah anak, sarana prasarana modern, pembiasaan islami, dan budaya sekolah kreatif di Malang.",
+        verified: true,
+        source: "YouTube SD Anak Saleh",
+        url: "https://youtu.be/Wttuw8v2-ME",
+      },
+      {
+        id: "i18",
+        theme: "kegiatan",
+        title: "Dokumentasi Pembiasaan & Sinergi Parenting (Instagram)",
+        detail:
+          "Dokumentasi liputan harian shalat dhuha berjamaah, gebyar bakat siswa, unjuk karya kreatif, serta sinergi kegiatan parenting bersama orang tua di akun resmi @sdanaksalehofficial.",
+        verified: true,
+        source: "Instagram @sdanaksalehofficial",
+        url: "https://www.instagram.com/sdanaksalehofficial/",
       },
     ],
   };
@@ -152,6 +204,11 @@
         "ngaji",
         "religius",
         "tauhid",
+        "dhuha",
+        "fardhu",
+        "tadarus",
+        "zikir",
+        "dzikir",
       ],
     },
     {
@@ -174,6 +231,10 @@
         "sholeh",
         "santun",
         "kepribadian",
+        "teladan",
+        "keteladanan",
+        "berkata kasar",
+        "kasar",
       ],
     },
     {
@@ -209,6 +270,9 @@
         "ramah",
         "kondusif",
         "bergaul",
+        "berkelahi",
+        "ejek",
+        "mengejek",
       ],
     },
     {
@@ -240,6 +304,12 @@
         "sinergi",
         "kolaborasi",
         "pantau",
+        "saran",
+        "kritik",
+        "humas",
+        "forum",
+        "masukan",
+        "komplain",
       ],
     },
     {
@@ -279,6 +349,23 @@
         "bersedia",
         "siap",
         "setuju",
+        "gadget",
+        "gawai",
+        "hp",
+        "handphone",
+        "pakaian",
+        "busana",
+        "dress code",
+        "aurat",
+        "jilbab",
+        "hijab",
+        "celana",
+        "terlambat",
+        "keterlambatan",
+        "hadir",
+        "tepat waktu",
+        "viral",
+        "viralkan",
       ],
     },
     {
@@ -388,6 +475,10 @@
         "Siap mematuhi seluruh tata tertib sekolah",
         "Siap menjaga nama baik sekolah di dunia nyata dan medsos",
         "Mendukung setiap kebijakan dan program sekolah",
+        "Bijak bersosial media & dialog internal",
+        "Etika berpakaian sopan & menutup aurat saat jemput",
+        "Sinkronisasi ibadah shalat & tadarus di rumah",
+        "Dukung penegakan adab anti-bullying & disiplin gadget",
       ],
     },
   ];
@@ -449,43 +540,128 @@
     return state.geminiKeys[state.geminiKeyIdx] || "";
   }
   async function callGemini(prompt) {
-    var keys = state.geminiKeys.filter(function (k) { return k.trim(); });
-    if (!keys.length) throw new Error("Belum ada API Key yang tersimpan.");
+    var keys = state.geminiKeys.filter(function (k) {
+      return k && k.trim();
+    });
+    if (!keys.length) {
+      throw new Error("Belum ada API Key yang tersimpan.");
+    }
     var startIdx = state.geminiKeyIdx % keys.length;
+    var lastError = "";
+
     for (var i = 0; i < keys.length; i++) {
       var idx = (startIdx + i) % keys.length;
       var key = keys[idx].trim();
-      var url =
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
-        key;
-      try {
-        var resp = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 800 },
-          }),
-        });
-        if (resp.status === 429) {
-          state.geminiKeyIdx = (idx + 1) % keys.length;
+      var models = [
+        "gemini-3.8-flash",
+        "gemini-3.5-flash",
+        "gemini-2.5-flash",
+        "gemini-2.5-flash-lite",
+        "gemini-2.0-flash-lite",
+      ];
+
+      for (var m = 0; m < models.length; m++) {
+        var modelName = models[m];
+        var url =
+          "https://generativelanguage.googleapis.com/v1beta/models/" +
+          modelName +
+          ":generateContent?key=" +
+          encodeURIComponent(key);
+
+        try {
+          var resp = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { temperature: 0.7, maxOutputTokens: 800 },
+            }),
+          });
+
+          if (resp.status === 429) {
+            // Cek apakah 429 karena kuota habis atau high demand
+            var errData429 = null;
+            try {
+              errData429 = await resp.json();
+            } catch (_) {}
+            var msg429 =
+              (errData429 &&
+                errData429.error &&
+                errData429.error.message) ||
+              "";
+
+            if (
+              /high demand|overloaded|spikes in demand/i.test(msg429) &&
+              m < models.length - 1
+            ) {
+              lastError = "[" + modelName + "] " + msg429;
+              await new Promise(function (res) {
+                setTimeout(res, 500);
+              });
+              continue;
+            }
+
+            lastError =
+              "Batas kuota gratis terlampaui (Error 429) untuk key #" +
+              (idx + 1);
+            state.geminiKeyIdx = (idx + 1) % keys.length;
+            break;
+          }
+
+          if (!resp.ok) {
+            var errData = null;
+            try {
+              errData = await resp.json();
+            } catch (_) {}
+            var msg =
+              (errData && errData.error && errData.error.message) ||
+              "HTTP " + resp.status + " " + resp.statusText;
+
+            var isOverload =
+              resp.status === 503 ||
+              /high demand|overloaded|spikes in demand|temporarily unavailable|capacity/i.test(msg);
+            // Tangkap semua varian "not found" termasuk "is not found for API version"
+            var isNotAvailable =
+              resp.status === 404 ||
+              /no longer available|not found|is not found|unsupported|deprecated|not supported/i.test(msg);
+
+            // Jika model tidak tersedia atau padat, coba model berikutnya
+            if ((isOverload || isNotAvailable) && m < models.length - 1) {
+              lastError = "[" + modelName + "] " + msg;
+              await new Promise(function (res) {
+                setTimeout(res, 300);
+              });
+              continue;
+            }
+            // Model terakhir pun tidak tersedia → coba key berikutnya
+            if (isNotAvailable) {
+              lastError = "[" + modelName + "] " + msg;
+              break;
+            }
+            throw new Error(msg);
+          }
+
+          var data = await resp.json();
+          if (
+            !data.candidates ||
+            !data.candidates[0] ||
+            !data.candidates[0].content ||
+            !data.candidates[0].content.parts ||
+            !data.candidates[0].content.parts[0]
+          ) {
+            throw new Error("Format respons AI kosong atau tidak sesuai.");
+          }
+
+          state.geminiKeyIdx = idx;
+          return data.candidates[0].content.parts[0].text;
+        } catch (e) {
+          // Bug fix: gunakan continue bukan break agar model berikutnya dicoba
+          lastError = "[" + modelName + "] " + (e.message || String(e));
           continue;
         }
-        if (!resp.ok) {
-          var errData = await resp.json();
-          throw new Error(
-            (errData.error && errData.error.message) || "Gagal: " + resp.status
-          );
-        }
-        var data = await resp.json();
-        state.geminiKeyIdx = idx;
-        return data.candidates[0].content.parts[0].text;
-      } catch (e) {
-        if (e.message && e.message.indexOf("Gagal") === 0) throw e;
-        // network error – try next key
       }
     }
-    throw new Error("Semua API Key sudah mencapai batas kuota. Coba lagi nanti.");
+    throw new Error(lastError || "Gagal menghubungi Gemini API.");
   }
 
   var state = {
@@ -513,6 +689,10 @@
     geminiKeyIdx: 0,
     geminiStatus: "idle",
     geminiMsg: "",
+    aiPenguat: {},
+    aiAnalysis: null,
+    aiAnalysisStatus: "idle",
+    aiAnalysisErr: "",
   };
   var lastThemes = {};
 
@@ -522,18 +702,40 @@
       if (raw) {
         var o = JSON.parse(raw);
         if (o && Array.isArray(o.items)) {
+          // Selalu pastikan butir referensi komitmen & media resmi ada & tersinkronisasi
+          o.youtube = DEFAULT_SCHOOL.youtube;
+          o.instagram = DEFAULT_SCHOOL.instagram;
+          o.instagramHandle = DEFAULT_SCHOOL.instagramHandle;
+          var map = {};
           o.items.forEach(function (it) {
-            if (it.theme === "biaya") {
-              it.theme = "komitmen";
-              if (it.title === "Rincian biaya dijelaskan di awal") {
-                it.title = "Kemitraan dan Tata Tertib Sekolah";
-                it.detail =
-                  "SD Anak Saleh mengutamakan sinergi positif dengan orang tua untuk mendidik anak bersama, mematuhi tata tertib, serta saling menjaga nama baik sekolah baik di lingkungan nyata maupun media sosial.";
-                it.verified = true;
-                it.source = "Pedoman Kemitraan SD Anak Saleh";
-              }
+            map[it.id] = it;
+          });
+          var changed = false;
+          DEFAULT_SCHOOL.items.forEach(function (defIt) {
+            if (!map[defIt.id]) {
+              o.items.push(JSON.parse(JSON.stringify(defIt)));
+              changed = true;
+            } else if (
+              defIt.verified &&
+              (!map[defIt.id].verified ||
+                map[defIt.id].title !== defIt.title ||
+                defIt.url !== map[defIt.id].url)
+            ) {
+              map[defIt.id].title = defIt.title;
+              map[defIt.id].detail = defIt.detail;
+              map[defIt.id].theme = defIt.theme;
+              map[defIt.id].verified = true;
+              map[defIt.id].source = defIt.source;
+              map[defIt.id].url = defIt.url || "";
+              changed = true;
             }
           });
+          if (changed || !o.v || o.v < 2) {
+            o.v = 2;
+            try {
+              localStorage.setItem(KEY, JSON.stringify(o));
+            } catch (err) {}
+          }
           return o;
         }
       }
@@ -641,6 +843,7 @@
       total: r.total,
       percent: r.total ? Math.round((r.covered / r.total) * 100) : 0,
       closing: closing(r),
+      aiAnalysis: state.aiAnalysis || null,
     };
 
     var existingIdx = -1;
@@ -928,7 +1131,13 @@
       '<div class="item-detail">' +
       esc(it.detail) +
       "</div>" +
-      (it.source
+      (it.url
+        ? '<div style="margin-top:8px;"><a href="' +
+          esc(it.url) +
+          '" target="_blank" rel="noopener noreferrer" class="badge" style="text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 8px;background:var(--bg-subtle,#f8fafc);color:var(--accent,#0f766e);border-color:var(--border-subtle,#cbd5e1);font-weight:500;"><i data-lucide="external-link" style="width:12px;height:12px;"></i> ' +
+          (it.source ? esc(it.source) : "Buka Tautan") +
+          "</a></div>"
+        : it.source
         ? '<div class="src">Sumber: ' + esc(it.source) + "</div>"
         : "") +
       "</div>"
@@ -1082,9 +1291,121 @@
       (state.step === N ? '<i data-lucide="check-circle-2"></i> Lihat ringkasan' : 'Lanjut <i data-lucide="arrow-right"></i>') +
       "</button></div>" +
       "</div>" +
-      '<aside class="panel"><div class="panel-head"><span class="card-title"><i class="live-dot"></i>Penguat dari data sekolah</span><span class="badge" id="pg-count">0 tema</span></div>' +
+      '<aside class="panel"><div class="panel-head"><span class="card-title"><i class="live-dot"></i>Penguat dari Data Sekolah & AI</span><span class="badge" id="pg-count">0 tema</span></div>' +
+      '<div style="padding:8px 12px;background:var(--bg-subtle,#f8fafc);border-bottom:1px solid var(--border-subtle,#e2e8f0);display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' +
+      '<a href="https://youtu.be/Wttuw8v2-ME" target="_blank" rel="noopener noreferrer" class="badge" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;color:#dc2626;border-color:hsl(0 70% 88%);background:#fef2f2;font-size:11px;" title="Buka Video Profil YouTube">' +
+      '<i data-lucide="video" style="width:12px;height:12px;"></i> Video Profil YouTube</a>' +
+      '<a href="https://www.instagram.com/sdanaksalehofficial/" target="_blank" rel="noopener noreferrer" class="badge" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;color:#be185d;border-color:hsl(330 70% 88%);background:#fdf2f8;font-size:11px;" title="Buka Instagram @sdanaksalehofficial">' +
+      '<i data-lucide="instagram" style="width:12px;height:12px;"></i> @sdanaksalehofficial</a>' +
+      '</div>' +
+      '<div id="ai-penguat-card" style="padding:10px 12px;background:hsl(168 60% 98%);border-bottom:1px solid var(--border-subtle,#e2e8f0);">' +
+      '<div class="row between" style="align-items:center;margin-bottom:6px;">' +
+      '<span style="font-size:12px;font-weight:600;color:var(--accent,#0f766e);display:inline-flex;align-items:center;gap:4px;">' +
+      '<i data-lucide="sparkles" style="width:13px;height:13px;"></i> Respon Penguat Spontan (AI)</span>' +
+      '<button class="btn btn-ghost btn-sm" data-action="generate-ai-penguat" style="padding:2px 7px;font-size:11px;height:auto;" title="Buatkan respon spontan meyakinkan berbasis AI">' +
+      '<i data-lucide="sparkles" style="width:11px;height:11px;"></i> Buat Respon</button>' +
+      '</div>' +
+      '<div id="ai-penguat-content" style="font-size:12px;line-height:1.45;color:var(--text-main,#0f172a);">' +
+      (state.aiPenguat && state.aiPenguat[state.step]
+        ? '<div style="font-weight:500;margin-bottom:4px;">“' +
+          esc(state.aiPenguat[state.step]) +
+          '”</div><div style="font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;"><span class="badge ok" style="font-size:9px;padding:1px 4px;"><i data-lucide="check"></i> Siap Diucapkan</span> Didukung YouTube & Instagram</div>'
+        : '<span class="muted" style="font-style:italic;">Ketik jawaban lalu klik "Buat Respon" untuk respon santun siap ucap meramu Data Sekolah, YouTube & Instagram.</span>') +
+      '</div></div>' +
       '<div class="stack" id="penguat"></div></aside></div>'
     );
+  }
+
+  function renderFormattedAiText(raw) {
+    if (!raw) return "";
+    var parts = raw.split(/(?=###\s+)/g);
+    return parts
+      .map(function (part) {
+        var lines = part.trim().split("\n");
+        var title = lines[0].replace(/^###\s*/, "").trim();
+        var body = lines.slice(1).join("\n").trim();
+        if (!title && !body) return "";
+
+        var icon = "sparkles";
+        if (/narasi|profil/i.test(title)) icon = "heart-handshake";
+        else if (/catatan|wali kelas|guru/i.test(title)) icon = "graduation-cap";
+        else if (/whatsapp|pesan|draf/i.test(title)) icon = "message-circle";
+
+        return (
+          '<div style="background:#ffffff;border:1px solid var(--border-subtle,#e2e8f0);border-radius:var(--radius-sm,6px);padding:14px;margin-bottom:10px;">' +
+          '<div style="font-weight:600;font-size:14px;color:var(--accent,#0f766e);margin-bottom:8px;display:flex;align-items:center;gap:6px;">' +
+          '<i data-lucide="' +
+          icon +
+          '" style="width:16px;height:16px;"></i> ' +
+          esc(title) +
+          "</div>" +
+          '<div style="white-space:pre-wrap;color:var(--text-main,#1e293b);font-size:13px;line-height:1.55;">' +
+          esc(body) +
+          "</div>" +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+
+  function renderAiAnalysisSection() {
+    var isL = state.aiAnalysisStatus === "loading";
+    var res = state.aiAnalysis;
+    var err = state.aiAnalysisErr;
+
+    var h =
+      '<div class="card" data-anim="r" style="border-left:4px solid var(--accent,#0f766e);background:linear-gradient(to bottom, #ffffff, hsl(168 50% 99%));">' +
+      '<div class="row between" style="align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap;">' +
+      "<div>" +
+      '<span class="card-title" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-main,#0f172a);">' +
+      '<i data-lucide="sparkles" style="color:var(--accent,#0f766e);"></i> Analisis & Penguat Komprehensif AI (Gemini)' +
+      "</span>" +
+      '<p class="muted" style="font-size:13px;margin:2px 0 0;">' +
+      "Sinergi Jawaban Orang Tua + Data Sekolah + Video YouTube Profil + Instagram Resmi" +
+      "</p></div>" +
+      '<div class="row" style="gap:8px;">' +
+      '<button class="btn btn-primary btn-sm" data-action="run-full-ai-analysis"' +
+      (isL ? " disabled" : "") +
+      ">" +
+      (isL
+        ? '<i data-lucide="loader" class="spin"></i> Menganalisis…'
+        : '<i data-lucide="sparkles"></i> ' +
+          (res ? "Analisis Ulang AI" : "Buat Analisis AI")) +
+      "</button>" +
+      (res
+        ? '<button class="btn btn-outline btn-sm" data-action="copy-wa-draft" title="Salin Draf Pesan WhatsApp untuk Orang Tua"><i data-lucide="copy"></i> Salin Draf WA</button>'
+        : "") +
+      "</div></div>";
+
+    if (isL) {
+      h +=
+        '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">' +
+        '<i data-lucide="loader" class="spin" style="width:22px;height:22px;margin:0 auto 10px;display:block;color:var(--accent,#0f766e);"></i>' +
+        "<div>Sedang menganalisis jawaban dan meramu penguat dari profil sekolah, video YouTube, dan Instagram…</div></div>";
+    } else if (err) {
+      h +=
+        '<div class="notice" style="border-color:hsl(0 70% 80%);background:hsl(0 80% 98%);color:var(--danger);">' +
+        '<i data-lucide="alert-triangle"></i> Gagal menghasilkan analisis AI: ' +
+        esc(err) +
+        "</div>";
+    } else if (res) {
+      h +=
+        '<div class="stack" style="gap:4px;">' +
+        renderFormattedAiText(res) +
+        '<div class="row" style="gap:8px;margin-top:6px;align-items:center;">' +
+        '<span class="badge ok" style="font-size:11px;padding:3px 8px;"><i data-lucide="check-circle-2"></i> Analisis AI Aktif</span>' +
+        '<span class="muted" style="font-size:12px;">Didukung Data Resmi, YouTube Profil & Instagram @sdanaksalehofficial</span>' +
+        "</div>" +
+        "</div>";
+    } else {
+      h +=
+        '<div style="padding:14px;background:var(--bg-subtle,#f8fafc);border-radius:var(--radius-sm,6px);border:1px dashed var(--border-subtle,#cbd5e1);font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">' +
+        '<span>Klik tombol <b>"Buat Analisis AI"</b> di atas untuk menghasilkan rangkuman keselarasan nilai, catatan wali kelas, dan draf pesan WhatsApp apresiasi.</span>' +
+        "</div>";
+    }
+
+    h += "</div>";
+    return h;
   }
 
   function resultView() {
@@ -1135,6 +1456,8 @@
       '<div class="card flat" data-anim="r"><span class="card-title">Kalimat penutup untuk pewawancara</span><p class="close-quote">' +
       esc(closing(r)) +
       "</p></div></div>";
+
+    h += renderAiAnalysisSection();
     if (unv > 0)
       h +=
         '<div class="notice" data-anim="r">Ringkasan ini memakai ' +
@@ -1380,6 +1703,38 @@
       f("sf-addr", "Alamat", "address") +
       f("sf-year", "Tahun berdiri", "founded") +
       "</div></div>" +
+      '<div class="card" data-anim="in" style="border-left:4px solid var(--accent, #0f766e);">' +
+      '<div class="row between" style="margin-bottom:12px;align-items:center;">' +
+      '<div><span class="card-title" style="display:flex;align-items:center;gap:8px;">' +
+      '<i data-lucide="shield-check" style="color:var(--accent, #0f766e);"></i> 7 Butir Komitmen Resmi SD Anak Saleh</span>' +
+      '<p class="muted" style="font-size:13px;margin:4px 0 0;">Referensi resmi yang otomatis menjadi penguat wawancara komitmen wali murid.</p></div>' +
+      '<button class="btn btn-outline btn-sm" data-action="sync-reference" title="Perbarui ulang butir komitmen resmi">' +
+      '<i data-lucide="refresh-cw"></i> Sinkronkan Referensi' +
+      '</button></div>' +
+      '<div class="stack" style="gap:8px;">' +
+      [
+        { id: "i13", t: "Komitmen Bijak Bersosial Media", tag: "Komitmen", d: "Penyelesaian internal & kekeluargaan, tanpa memviralkan masalah sekolah ke media sosial." },
+        { id: "i14", t: "Etika Berpakaian (Dress Code) Antar/Jemput", tag: "Komitmen", d: "Teladan nilai syariat: bapak celana panjang rapi, ibu wajib hijab/jilbab syar'i." },
+        { id: "i11", t: "Saluran Resmi Saran dan Kritik", tag: "Kerja Sama Ortu", d: "Masukan santun & produktif melalui humas, dialog resmi, atau janji temu manajemen." },
+        { id: "i6", t: "Sinkronisasi Pembiasaan Ibadah Harian", tag: "Pembiasaan Agama", d: "Kawal shalat fardhu, dhuha, dan tadarus Al-Qur'an secara konsisten di rumah." },
+        { id: "i7", t: "Penegakan Adab & Anti-Bullying (Berkata Kasar)", tag: "Akhlak & Karakter", d: "Aturan ketat larangan bully & berkata kasar, serta dukungan pembinaan sekolah." },
+        { id: "i15", t: "Kedisiplinan Kehadiran dan Waktu Pagi", tag: "Komitmen", d: "Ritme pagi disiplin di rumah agar anak hadir tepat waktu sebelum bel pembiasaan." },
+        { id: "i16", t: "Pembatasan Gadget (Gawai) dan Teknologi", tag: "Komitmen", d: "Aturan 'no gadget' magrib–isya di rumah dan larangan bawa gawai ke sekolah." }
+      ].map(function (ref, idx) {
+        return (
+          '<div style="padding:10px 14px;background:var(--bg-subtle, #f8fafc);border:1px solid var(--border-subtle, #e2e8f0);border-radius:var(--radius-sm, 6px);display:flex;align-items:flex-start;gap:10px;">' +
+          '<span style="font-weight:600;color:var(--accent, #0f766e);min-width:20px;">' + (idx + 1) + '.</span>' +
+          '<div style="flex:1;">' +
+          '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+          '<strong style="font-size:13px;color:var(--text-main, #0f172a);">' + esc(ref.t) + '</strong>' +
+          '<span class="badge ok" style="font-size:10px;padding:1px 6px;">' + esc(ref.tag) + '</span>' +
+          '</div>' +
+          '<p class="muted" style="font-size:12px;margin:2px 0 0;line-height:1.4;">' + esc(ref.d) + '</p>' +
+          '</div>' +
+          '</div>'
+        );
+      }).join("") +
+      '</div></div>' +
       '<div class="row between" data-anim="in"><div class="stat"><span class="badge ok">' +
       ver +
       ' terverifikasi</span><span class="badge warn">' +
@@ -1863,6 +2218,18 @@
     }
   }
 
+  function copyViaTextarea(text) {
+    var dummy = document.createElement("textarea");
+    dummy.value = text;
+    document.body.appendChild(dummy);
+    dummy.select();
+    try {
+      document.execCommand("copy");
+      alert("Draf pesan WhatsApp berhasil disalin!");
+    } catch (_) {}
+    document.body.removeChild(dummy);
+  }
+
   document.addEventListener("click", function (e) {
     var b = e.target.closest ? e.target.closest("[data-action]") : null;
     if (!b) return;
@@ -1916,6 +2283,10 @@
         };
         state.answers = (target.answers || []).slice();
         state.activeSessionId = target.id;
+        state.aiAnalysis = target.aiAnalysis || null;
+        state.aiAnalysisStatus = target.aiAnalysis ? "ok" : "idle";
+        state.aiAnalysisErr = "";
+        state.aiPenguat = {};
         state.done = true;
         state.tab = "interview";
         render();
@@ -1940,6 +2311,10 @@
       state.profile.anak = "";
       state.profile.pewawancara = "";
       state.activeSessionId = null;
+      state.aiAnalysis = null;
+      state.aiAnalysisStatus = "idle";
+      state.aiAnalysisErr = "";
+      state.aiPenguat = {};
       render();
       window.scrollTo(0, 0);
     } else if (a === "copy") {
@@ -1991,6 +2366,29 @@
       state.school = JSON.parse(JSON.stringify(DEFAULT_SCHOOL));
       saveSchool();
       render();
+    } else if (a === "sync-reference") {
+      var map = {};
+      state.school.items.forEach(function (it) {
+        map[it.id] = it;
+      });
+      DEFAULT_SCHOOL.items.forEach(function (defIt) {
+        if (!map[defIt.id]) {
+          state.school.items.push(JSON.parse(JSON.stringify(defIt)));
+        } else if (defIt.verified) {
+          map[defIt.id].title = defIt.title;
+          map[defIt.id].detail = defIt.detail;
+          map[defIt.id].theme = defIt.theme;
+          map[defIt.id].verified = true;
+          map[defIt.id].source = defIt.source;
+          map[defIt.id].url = defIt.url || "";
+        }
+      });
+      state.school.youtube = DEFAULT_SCHOOL.youtube;
+      state.school.instagram = DEFAULT_SCHOOL.instagram;
+      state.school.instagramHandle = DEFAULT_SCHOOL.instagramHandle;
+      state.school.v = 3;
+      saveSchool();
+      render();
     } else if (a === "save-gemini-keys") {
       var ta = $("#gemini-keys");
       var keys = ta
@@ -2008,8 +2406,25 @@
       saveGeminiKeys(keys);
       render();
     } else if (a === "test-gemini") {
+      var ta = $("#gemini-keys");
+      if (ta) {
+        var inputKeys = ta.value
+          .split("\n")
+          .map(function (k) { return k.trim(); })
+          .filter(Boolean);
+        if (inputKeys.length) {
+          state.geminiKeys = inputKeys;
+          saveGeminiKeys(inputKeys);
+        }
+      }
+      if (!state.geminiKeys.length) {
+        state.geminiStatus = "error";
+        state.geminiMsg = "Silakan masukkan API Key di kolom teks terlebih dahulu.";
+        render();
+        return;
+      }
       state.geminiStatus = "testing";
-      state.geminiMsg = "Menguji koneksi…";
+      state.geminiMsg = "Menguji koneksi ke Google Gemini AI…";
       render();
       callGemini(
         "Balas dengan satu kalimat singkat dalam bahasa Indonesia bahwa koneksi berhasil."
@@ -2017,7 +2432,7 @@
         .then(function (result) {
           state.geminiStatus = "ok";
           state.geminiMsg =
-            "Berhasil! Balasan AI: " + result.trim().slice(0, 160);
+            "Berhasil terhubung! Balasan AI: \"" + result.trim().slice(0, 160) + "\"";
           render();
         })
         .catch(function (err) {
@@ -2025,6 +2440,130 @@
           state.geminiMsg = "Gagal: " + (err.message || String(err));
           render();
         });
+    } else if (a === "generate-ai-penguat") {
+      var currentStep = state.step;
+      var ta = $("#answer");
+      if (ta) {
+        state.answers[currentStep - 1] = ta.value;
+      }
+      var answer = (state.answers[currentStep - 1] || "").trim();
+      var q = QUESTIONS[currentStep - 1];
+      if (!answer) {
+        alert("Silakan ketik atau pilih jawaban " + sap() + " terlebih dahulu.");
+        return;
+      }
+      var cb = $("#ai-penguat-content");
+      if (cb) {
+        cb.innerHTML =
+          '<span class="muted" style="display:inline-flex;align-items:center;gap:6px;"><i data-lucide="loader" class="spin"></i> Meramu respon penguat dari Data Sekolah, YouTube & Instagram…</span>';
+        if (window.lucide) lucide.createIcons();
+      }
+      var prompt =
+        "Kamu adalah asisten pewawancara PPDB SD Anak Saleh Malang.\n" +
+        "Pewawancara sedang mewawancarai " + sap() + " dari calon murid bernama " + (state.profile.anak || "ananda") + ".\n" +
+        "Pertanyaan: \"" + fill(q.q) + "\"\n" +
+        "Jawaban orang tua: \"" + answer + "\"\n\n" +
+        "Tugas: Buatkan 1-2 kalimat respon lisan (talking point) penguat yang hangat, empatik, dan meyakinkan untuk langsung diucapkan pewawancara.\n" +
+        "Ketentuan:\n" +
+        "1. Kuatkan keputusan orang tua dengan mengaitkan keunggulan SD Anak Saleh (sekolah Islam ramah anak, pembiasaan ibadah harian, penegakan adab anti-bully, 7 komitmen kemitraan).\n" +
+        "2. Sebutkan secara natural bahwa orang tua juga dapat melihat bukti dokumentasinya di video profil YouTube SD Anak Saleh atau Instagram resmi @sdanaksalehofficial jika relevan.\n" +
+        "3. Berikan HANYA kalimat siap ucap (tanpa tanda petik, tanpa kata pengantar).";
+
+      callGemini(prompt)
+        .then(function (res) {
+          state.aiPenguat[currentStep] = res.trim();
+          var box = $("#ai-penguat-content");
+          if (box) {
+            box.innerHTML =
+              '<div style="font-weight:500;margin-bottom:4px;color:var(--text-main,#0f172a);">“' +
+              esc(res.trim()) +
+              '”</div><div style="font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;"><span class="badge ok" style="font-size:9px;padding:1px 4px;"><i data-lucide="check"></i> Siap Diucapkan</span> Didukung YouTube & Instagram</div>';
+            if (window.lucide) lucide.createIcons();
+          }
+        })
+        .catch(function (err) {
+          var box = $("#ai-penguat-content");
+          if (box) {
+            box.innerHTML =
+              '<span style="color:var(--danger);font-size:12px;">Gagal memuat respon AI: ' +
+              esc(err.message || String(err)) +
+              '</span>';
+          }
+        });
+    } else if (a === "run-full-ai-analysis") {
+      state.aiAnalysisStatus = "loading";
+      state.aiAnalysisErr = "";
+      render();
+
+      var summaryAll = QUESTIONS.map(function (q, idx) {
+        return (
+          (idx + 1) +
+          ". Pertanyaan: " +
+          fill(q.q) +
+          "\n   Jawaban " +
+          sap() +
+          ": " +
+          (state.answers[idx] || "(Belum dijawab)")
+        );
+      }).join("\n\n");
+
+      var promptFull =
+        "Kamu adalah konsultan ahli PPDB SD Anak Saleh Malang.\n" +
+        "Lakukan analisis mendalam atas hasil wawancara calon orang tua murid berikut:\n\n" +
+        "Calon Murid: " +
+        (state.profile.anak || "-") +
+        "\n" +
+        "Orang Tua: " +
+        computeOrtu(state.profile) +
+        " (" +
+        sap() +
+        ")\n" +
+        "Alamat: " +
+        (state.profile.alamat || "-") +
+        "\n" +
+        "Pewawancara: " +
+        (state.profile.pewawancara || "-") +
+        "\n\n" +
+        "Tanya Jawab Wawancara:\n" +
+        summaryAll +
+        "\n\n" +
+        "Data Referensi Resmi SD Anak Saleh:\n" +
+        "- Profil: SD Anak Saleh Malang (Sekolah Ramah Anak, Unggul Agama & Karakter)\n" +
+        "- 7 Komitmen: Bijak Medsos, Dress code syar'i antar/jemput, Saluran saran resmi humas, Sinkronisasi shalat/tadarus di rumah, Penegakan adab anti-bully, Disiplin kehadiran pagi, Pembatasan gadget rumah.\n" +
+        "- Media Resmi: YouTube Profil (https://youtu.be/Wttuw8v2-ME) dan Instagram (@sdanaksalehofficial - https://www.instagram.com/sdanaksalehofficial/).\n\n" +
+        "Format Output (Wajib ikuti persis 3 bagian di bawah dengan heading markdown ###):\n\n" +
+        "### 1. Narasi Profil & Keselarasan Nilai Keluarga\n" +
+        "(1-2 paragraf hangat tentang keselarasan harapan orang tua dengan iklim belajar di SD Anak Saleh)\n\n" +
+        "### 2. Catatan Khusus untuk Wali Kelas / Guru Pendamping\n" +
+        "(3-4 poin rekomendasi konkret mengenai adaptasi, kebiasaan, dan pendampingan yang dibutuhkan ananda saat mulai bersekolah)\n\n" +
+        "### 3. Draf Pesan WhatsApp Apresiasi untuk Orang Tua\n" +
+        "(Draf pesan WhatsApp ramah dan islami untuk dikirimkan pewawancara kepada orang tua. Ucapkan terima kasih, tegaskan komitmen sinergi, serta sertakan link video profil YouTube https://youtu.be/Wttuw8v2-ME dan Instagram https://www.instagram.com/sdanaksalehofficial/ agar keluarga bisa melihat dokumentasi pembiasaan sekolah bersama di rumah)";
+
+      callGemini(promptFull)
+        .then(function (text) {
+          state.aiAnalysis = text.trim();
+          state.aiAnalysisStatus = "ok";
+          saveCurrentInterview();
+          render();
+        })
+        .catch(function (err) {
+          state.aiAnalysisStatus = "error";
+          state.aiAnalysisErr = err.message || String(err);
+          render();
+        });
+    } else if (a === "copy-wa-draft") {
+      var full = state.aiAnalysis || "";
+      var waMatch = full.match(/###\s*3[^\n]*\n([\s\S]*)$/i);
+      var waText = waMatch ? waMatch[1].trim() : full;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(waText).then(function () {
+          alert("Draf pesan WhatsApp berhasil disalin ke clipboard!");
+        }).catch(function () {
+          copyViaTextarea(waText);
+        });
+      } else {
+        copyViaTextarea(waText);
+      }
     }
   });
 
