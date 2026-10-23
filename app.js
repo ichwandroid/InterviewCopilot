@@ -498,7 +498,8 @@
     "Ustadz Riris",
     "Ustadzah Heni",
     "Ustadz Ichsan",
-    "Ustadz Davies"
+    "Ustadz Davies",
+    "Ustadzah Elin",
   ];
 
   var candidatesData = [];
@@ -522,9 +523,47 @@
     } catch (e) {}
   }
 
-  /* ---------- State ---------- */
+  /* ---------- State & AI Configuration ---------- */
   var KEY_INTERVIEWS = "sas-interviews-v1";
   var KEY_GEMINI = "sas-gemini-keys-v1";
+  var KEY_MODEL = "sas-gemini-model-v1";
+  var KEY_KNOWLEDGE = "sas-ai-knowledge-v1";
+
+  var DEFAULT_KNOWLEDGE = [
+    "# Referensi Data Komitmen & Penguat Sekolah (SD Anak Saleh)",
+    "",
+    "Dokumen rujukan resmi untuk grounding AI dalam wawancara calon orang tua murid baru (PPDB).",
+    "",
+    "## 7 Butir Komitmen Resmi SD Anak Saleh:",
+    "",
+    "### 1. Komitmen Bijak Bersosial Media",
+    "- Tema: Komitmen dan tata tertib",
+    "- Rujukan: Menyelesaikan kesalahpahaman atau insiden secara internal & kekeluargaan di ruang komunikasi sekolah yang telah disediakan. Wali murid berkomitmen tidak memposting, mengeluhkan, atau memviralkan masalah sekolah ke media sosial.",
+    "",
+    "### 2. Komitmen Etika Berpakaian (Dress Code) Mengantar/Menjemput",
+    "- Tema: Komitmen dan tata tertib",
+    "- Rujukan: Keteladanan nilai-nilai syariat Islam di lingkungan sekolah. Wali murid laki-laki wajib berpakaian sopan dan celana panjang rapi (bukan celana pendek). Wali murid perempuan wajib menutup aurat dengan jilbab/hijab syar'i.",
+    "",
+    "### 3. Komitmen Menyampaikan Saran dan Kritik",
+    "- Tema: Kerja sama dengan orang tua",
+    "- Rujukan: Masukan demi kemajuan sekolah disampaikan secara santun & produktif melalui forum dialog resmi, kontak humas, atau janji temu formal dengan manajemen sekolah, bukan pergunjingan di grup WhatsApp umum atau media sosial.",
+    "",
+    "### 4. Komitmen Sinkronisasi Ibadah Harian",
+    "- Tema: Pembiasaan agama",
+    "- Rujukan: Sekolah membiasakan shalat fardhu tepat waktu, shalat dhuha, dan tadarus Al-Qur'an. Orang tua berkomitmen mengawal dan mendampingi pembiasaan ibadah ini secara konsisten di rumah agar pembentukan karakter islami berjalan selaras.",
+    "",
+    "### 5. Komitmen Penegakan Adab dan Kesopanan (Anti-Bullying & Berkata Kasar)",
+    "- Tema: Akhlak dan karakter",
+    "- Rujukan: Aturan ketat dilarang mengejek (bullying), berkelahi, dan berkata kasar/kotor. Orang tua menyaring tontonan, game, atau lingkungan pergaulan anak di rumah, serta mendukung penuh tindakan disiplin pembinaan dari sekolah.",
+    "",
+    "### 6. Komitmen Kedisiplinan Kehadiran dan Keterlambatan",
+    "- Tema: Komitmen dan tata tertib",
+    "- Rujukan: Orang tua melatih ritme pagi anak sejak bangun tidur agar anak tiba di sekolah tepat waktu sebelum bel masuk untuk pembiasaan pagi (zikir dan shalat dhuha bersama).",
+    "",
+    "### 7. Komitmen Pembatasan Gadget (Gawai) dan Teknologi",
+    "- Tema: Komitmen dan tata tertib",
+    "- Rujukan: Siswa dilarang membawa gadget ke sekolah. Orang tua membatasi dan mengawasi penggunaan gawai di rumah (penerapan aturan 'no gadget' waktu magrib hingga isya) demi konsentrasi belajar dan kesehatan mata anak."
+  ].join("\n");
 
   function loadGeminiKeys() {
     try {
@@ -539,29 +578,85 @@
   function saveGeminiKeys(arr) {
     try { localStorage.setItem(KEY_GEMINI, JSON.stringify(arr)); } catch (e) {}
   }
+
+  function loadSelectedModel() {
+    try {
+      var m = localStorage.getItem(KEY_MODEL);
+      // Auto-migrasi jika user sebelumnya menyimpan model yang sudah dideprecate oleh Google
+      if (m === "gemini-2.0-flash-lite" || m === "gemini-2.0-flash") {
+        m = "gemini-1.5-flash";
+        localStorage.setItem(KEY_MODEL, m);
+      }
+      if (m && m.trim()) return m;
+    } catch (e) {}
+    return "gemini-1.5-flash";
+  }
+  function saveSelectedModel(m) {
+    try { localStorage.setItem(KEY_MODEL, m); } catch (e) {}
+  }
+
+  function loadKnowledge() {
+    try {
+      var k = localStorage.getItem(KEY_KNOWLEDGE);
+      if (k && k.trim()) return k;
+    } catch (e) {}
+    return DEFAULT_KNOWLEDGE;
+  }
+  function saveKnowledge(text) {
+    try { localStorage.setItem(KEY_KNOWLEDGE, text); } catch (e) {}
+  }
+
+  function estimateTokens(text) {
+    if (!text) return 0;
+    var words = text.trim().split(/\s+/).filter(Boolean).length;
+    return Math.round(words * 1.5);
+  }
+
   function getActiveGeminiKey() {
     return state.geminiKeys[state.geminiKeyIdx] || "";
   }
-  async function callGemini(prompt) {
+  async function callGemini(prompt, customSystem, strictModel) {
     var keys = state.geminiKeys.filter(function (k) {
       return k && k.trim();
     });
     if (!keys.length) {
-      throw new Error("Belum ada API Key yang tersimpan.");
+      throw new Error("Belum ada API Key Gemini yang tersimpan. Silakan masukkan API Key di tab Data Sekolah.");
     }
     var startIdx = state.geminiKeyIdx % keys.length;
     var lastError = "";
 
+    var preferred = state.selectedModel || "gemini-1.5-flash";
+    var standardModels = [
+      "gemini-1.5-flash",
+      "gemini-3.5-flash-lite",
+      "gemini-2.5-flash",
+      "gemini-1.5-pro",
+    ];
+    var models;
+    if (strictModel) {
+      models = [preferred];
+    } else {
+      models = [preferred].concat(
+        standardModels.filter(function (m) {
+          return m !== preferred;
+        })
+      );
+    }
+
+    var systemText = customSystem || (
+      "Kamu adalah asisten pewawancara dan konsultan PPDB SD Anak Saleh Malang dengan kemampuan grounding dokumen seperti Google NotebookLM.\n\n" +
+      "=== SUMBER DOKUMEN SEKOLAH (GROUNDING KNOWLEDGE BASE) ===\n" +
+      (state.aiKnowledge || DEFAULT_KNOWLEDGE) + "\n" +
+      "==========================================================\n\n" +
+      "Petunjuk Kerja (Source Grounding ala NotebookLM):\n" +
+      "1. Jadikan dokumen rujukan sekolah di atas sebagai sumber kebenaran mutlak.\n" +
+      "2. Ketika menjawab atau menganalisis, kaitkan secara presisi dengan nomor dan butir komitmen / tata tertib yang ada di dokumen sumber.\n" +
+      "3. Gunakan gaya bahasa Indonesia yang hangat, empatik, santun, dan profesional."
+    );
+
     for (var i = 0; i < keys.length; i++) {
       var idx = (startIdx + i) % keys.length;
       var key = keys[idx].trim();
-      var models = [
-        "gemini-3.8-flash",
-        "gemini-3.5-flash",
-        "gemini-2.5-flash",
-        "gemini-2.5-flash-lite",
-        "gemini-2.0-flash-lite",
-      ];
 
       for (var m = 0; m < models.length; m++) {
         var modelName = models[m];
@@ -571,18 +666,20 @@
           ":generateContent?key=" +
           encodeURIComponent(key);
 
+        var requestBody = {
+          contents: [{ parts: [{ text: prompt }] }],
+          systemInstruction: { parts: [{ text: systemText }] },
+          generationConfig: { temperature: 0.7, maxOutputTokens: 1200 },
+        };
+
         try {
           var resp = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { temperature: 0.7, maxOutputTokens: 800 },
-            }),
+            body: JSON.stringify(requestBody),
           });
 
           if (resp.status === 429) {
-            // Cek apakah 429 karena kuota habis atau high demand
             var errData429 = null;
             try {
               errData429 = await resp.json();
@@ -620,15 +717,38 @@
               (errData && errData.error && errData.error.message) ||
               "HTTP " + resp.status + " " + resp.statusText;
 
+            // Jika systemInstruction tidak didukung model tertentu, coba fallback embed systemText ke prompt
+            if (/systemInstruction/i.test(msg)) {
+              delete requestBody.systemInstruction;
+              requestBody.contents[0].parts[0].text =
+                systemText + "\n\n" + prompt;
+              var retryResp = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestBody),
+              });
+              if (retryResp.ok) {
+                var retryData = await retryResp.json();
+                if (
+                  retryData.candidates &&
+                  retryData.candidates[0] &&
+                  retryData.candidates[0].content &&
+                  retryData.candidates[0].content.parts &&
+                  retryData.candidates[0].content.parts[0]
+                ) {
+                  state.geminiKeyIdx = idx;
+                  return retryData.candidates[0].content.parts[0].text;
+                }
+              }
+            }
+
             var isOverload =
               resp.status === 503 ||
               /high demand|overloaded|spikes in demand|temporarily unavailable|capacity/i.test(msg);
-            // Tangkap semua varian "not found" termasuk "is not found for API version"
             var isNotAvailable =
               resp.status === 404 ||
               /no longer available|not found|is not found|unsupported|deprecated|not supported/i.test(msg);
 
-            // Jika model tidak tersedia atau padat, coba model berikutnya
             if ((isOverload || isNotAvailable) && m < models.length - 1) {
               lastError = "[" + modelName + "] " + msg;
               await new Promise(function (res) {
@@ -636,7 +756,6 @@
               });
               continue;
             }
-            // Model terakhir pun tidak tersedia → coba key berikutnya
             if (isNotAvailable) {
               lastError = "[" + modelName + "] " + msg;
               break;
@@ -658,7 +777,6 @@
           state.geminiKeyIdx = idx;
           return data.candidates[0].content.parts[0].text;
         } catch (e) {
-          // Bug fix: gunakan continue bukan break agar model berikutnya dicoba
           lastError = "[" + modelName + "] " + (e.message || String(e));
           continue;
         }
@@ -690,6 +808,8 @@
     firebaseStatus: "disconnected",
     geminiKeys: loadGeminiKeys(),
     geminiKeyIdx: 0,
+    selectedModel: loadSelectedModel(),
+    aiKnowledge: loadKnowledge(),
     geminiStatus: "idle",
     geminiMsg: "",
     aiPenguat: {},
@@ -1667,32 +1787,79 @@
       '<p class="muted" style="max-width:64ch">Semua penguat di hasil wawancara berasal dari data ini. Perubahan tersimpan otomatis di browser ini saja. Data yang ditandai contoh belum diverifikasi, jadi ganti dengan data resmi sekolah.</p></div>' +
       '<div class="card" data-anim="in">' +
       '<div class="row between" style="margin-bottom:12px">' +
-      '<span class="card-title"><i data-lucide="sparkles"></i> Gemini AI – API Keys</span>' +
+      '<span class="card-title" style="display:flex;align-items:center;gap:6px;"><i data-lucide="sparkles" style="color:var(--accent,#0f766e);"></i> Pengaturan Gemini AI & Model</span>' +
       (state.geminiStatus === "ok"
-        ? '<span class="badge ok"><i data-lucide="check-circle-2"></i> Terhubung</span>'
+        ? '<span class="badge ok"><i data-lucide="check-circle-2"></i> Terhubung (' + esc(state.selectedModel) + ')</span>'
         : state.geminiStatus === "error"
         ? '<span class="badge warn"><i data-lucide="alert-triangle"></i> Gagal</span>'
         : state.geminiStatus === "testing"
-        ? '<span class="badge"><i data-lucide="loader"></i> Menguji…</span>'
+        ? '<span class="badge"><i data-lucide="loader" class="spin"></i> Menguji…</span>'
         : '<span class="badge"><i data-lucide="minus"></i> Belum diuji</span>') +
       '</div>' +
-      '<div class="field"><label for="gemini-keys">API Keys (satu per baris — key teratas = utama, otomatis ganti jika kuota habis)</label>' +
-      '<textarea class="textarea" id="gemini-keys" style="min-height:96px;font-family:monospace;font-size:12px;letter-spacing:0.02em;" placeholder="AIzaSyXXXXXXXXXXXXXXXXXXXX&#10;AIzaSyYYYYYYYYYYYYYYYYYYYY">' +
+      '<div class="two" style="margin-bottom:12px;">' +
+      '<div class="field"><label for="ai-model-select"><b>Pilih Model AI</b> (Google Gemini)</label>' +
+      '<select class="select" id="ai-model-select" data-action="change-model">' +
+      [
+        { id: "gemini-1.5-flash", name: "⚡ Gemini 1.5 Flash (Rekomendasi Utama - Paling Stabil & Cepat)" },
+        { id: "gemini-3.5-flash-lite", name: "🪶 Gemini 3.5 Flash Lite (Generasi Baru Super Ringan - Rekomendasi Resmi Google)" },
+        { id: "gemini-2.5-flash", name: "🚀 Gemini 2.5 Flash (Generasi Baru - Cepat & Cerdas)" },
+        { id: "gemini-1.5-pro", name: "🧠 Gemini 1.5 Pro (Penalaran Mendalam / Deep Thinking)" }
+      ].map(function (m) {
+        return '<option value="' + m.id + '"' + (state.selectedModel === m.id ? " selected" : "") + '>' + m.name + '</option>';
+      }).join("") +
+      '</select>' +
+      '<p class="muted" style="font-size:11.5px;margin-top:2px;">Semua model di atas tersedia gratis di Google AI Studio (Free Tier).</p></div>' +
+      '<div class="field"><label>Status Kuota & Biaya</label>' +
+      '<div style="padding:8px 12px;background:var(--soft,#f0fdf4);border:1px solid var(--border,#bbf7d0);border-radius:var(--radius-sm,6px);font-size:12px;color:var(--primary);">' +
+      '✅ <b>100% Gratis Tanpa Kartu Kredit</b><br><span style="opacity:0.85;">1.500 request/hari · 1.000.000 token/menit</span>' +
+      '</div></div>' +
+      '</div>' +
+      '<div class="field"><label for="gemini-keys">API Keys Gemini (satu per baris — key teratas = utama, otomatis ganti jika kuota habis)</label>' +
+      '<textarea class="textarea" id="gemini-keys" style="min-height:76px;font-family:monospace;font-size:12px;letter-spacing:0.02em;" placeholder="AIzaSyXXXXXXXXXXXXXXXXXXXX&#10;AIzaSyYYYYYYYYYYYYYYYYYYYY">' +
       esc(state.geminiKeys.join("\n")) +
       '</textarea></div>' +
       (state.geminiMsg
-        ? '<p style="font-size:13px;margin:4px 0 8px;color:' +
+        ? '<div style="font-size:13px;margin:6px 0 10px;line-height:1.45;color:' +
           (state.geminiStatus === "ok" ? "var(--muted)" : "var(--danger)") +
-          '">' + esc(state.geminiMsg) + '</p>'
+          '">' + state.geminiMsg + '</div>'
         : '') +
       '<div class="row">' +
-      '<button class="btn btn-primary btn-sm" data-action="save-gemini-keys"><i data-lucide="save"></i> Simpan Keys</button>' +
-      '<button class="btn btn-outline btn-sm" data-action="test-gemini"><i data-lucide="zap"></i> Tes Koneksi</button>' +
+      '<button class="btn btn-primary btn-sm" data-action="save-gemini-keys"><i data-lucide="save"></i> Simpan Pengaturan AI</button>' +
+      '<button class="btn btn-outline btn-sm" data-action="test-gemini"><i data-lucide="zap"></i> Tes Koneksi Model</button>' +
       (state.geminiKeys.length > 1
         ? '<span class="muted" style="font-size:12px;align-self:center;">Key aktif: #' +
           (state.geminiKeyIdx + 1) + ' dari ' + state.geminiKeys.length + '</span>'
         : '') +
       '</div></div>' +
+      '<div class="card" data-anim="in" style="border-left:4px solid var(--accent, #0f766e);">' +
+      '<div class="row between" style="margin-bottom:8px;align-items:flex-start;">' +
+      '<div>' +
+      '<span class="card-title" style="display:flex;align-items:center;gap:8px;">' +
+      '<i data-lucide="book-open-check" style="color:var(--accent, #0f766e);"></i> Sumber Dokumen AI (Grounding ala NotebookLM)</span>' +
+      '<p class="muted" style="font-size:13px;margin:4px 0 0;">' +
+      'AI akan membaca dokumen ini sebagai <b>sumber rujukan utama</b> saat menganalisis jawaban dan memberikan penguat secara real-time.' +
+      '</p></div>' +
+      '<div style="text-align:right;">' +
+      '<span class="badge ok" id="badge-token-count" style="font-size:11px;padding:3px 8px;">' +
+      '📊 Estimasi: ~' + estimateTokens(state.aiKnowledge) + ' tokens' +
+      '</span>' +
+      '</div></div>' +
+      '<div class="field">' +
+      '<label for="ai-knowledge-base">Teks Dokumen Sumber (Tata tertib, pedoman komitmen, kurikulum, FAQ):</label>' +
+      '<textarea class="textarea" id="ai-knowledge-base" style="min-height:180px;font-family:var(--font-mono, monospace);font-size:12px;line-height:1.5;" placeholder="Tempelkan dokumen sumber rujukan sekolah di sini...">' +
+      esc(state.aiKnowledge || DEFAULT_KNOWLEDGE) +
+      '</textarea></div>' +
+      '<div class="row between" style="gap:8px;flex-wrap:wrap;">' +
+      '<div class="row" style="gap:8px;">' +
+      '<button class="btn btn-primary btn-sm" data-action="save-ai-knowledge"><i data-lucide="save"></i> Simpan Sumber Dokumen</button>' +
+      '<button class="btn btn-outline btn-sm" data-action="reset-ai-knowledge" title="Kembalikan ke isi referensi.md bawaan"><i data-lucide="rotate-ccw"></i> Muat Ulang referensi.md</button>' +
+      '</div>' +
+      '<div>' +
+      '<label class="btn btn-ghost btn-sm" style="cursor:pointer;" title="Unggah dokumen teks (.txt atau .md)">' +
+      '<i data-lucide="upload"></i> Unggah File (.txt / .md)' +
+      '<input type="file" id="upload-knowledge" accept=".txt,.md" style="display:none;">' +
+      '</label>' +
+      '</div></div></div>' +
       '<div class="card" data-anim="in"><div class="card-title">Profil sekolah</div>' +
       '<div class="two">' +
       f("sf-name", "Nama sekolah", "name") +
@@ -2133,6 +2300,12 @@
     if (t.id === "answer") {
       state.answers[state.step - 1] = t.value;
       schedulePenguat();
+    } else if (t.id === "ai-knowledge-base") {
+      state.aiKnowledge = t.value;
+      var badge = $("#badge-token-count");
+      if (badge) {
+        badge.textContent = "📊 Estimasi: ~" + estimateTokens(t.value) + " tokens";
+      }
     } else if (t.id === "hist-search") {
       state.searchQuery = t.value;
       var q = t.value.toLowerCase().trim();
@@ -2162,7 +2335,19 @@
 
   document.addEventListener("change", function (e) {
     var t = e.target;
-    if (t && (t.id === "p-id" || t.id === "p-anak" || t.id === "p-ayah" || t.id === "p-ibu" || t.id === "p-alamat")) {
+    if (t && t.id === "ai-model-select") {
+      state.selectedModel = t.value;
+      saveSelectedModel(t.value);
+    } else if (t && t.id === "upload-knowledge" && t.files && t.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        state.aiKnowledge = evt.target.result;
+        saveKnowledge(state.aiKnowledge);
+        render();
+        alert("Dokumen sumber AI berhasil dimuat dari file! Estimasi: ~" + estimateTokens(state.aiKnowledge) + " tokens.");
+      };
+      reader.readAsText(t.files[0]);
+    } else if (t && (t.id === "p-id" || t.id === "p-anak" || t.id === "p-ayah" || t.id === "p-ibu" || t.id === "p-alamat")) {
       handleCandidateAutocomplete(t);
     } else if (t && t.getAttribute && t.getAttribute("data-profile")) {
       state.profile[t.getAttribute("data-profile")] = t.value;
@@ -2392,28 +2577,62 @@
       state.school.v = 3;
       saveSchool();
       render();
-    } else if (a === "save-gemini-keys") {
+    } else if (a === "save-gemini-keys" || a === "save-ai-settings") {
       var ta = $("#gemini-keys");
+      var selModel = $("#ai-model-select");
+      if (selModel) {
+        state.selectedModel = selModel.value;
+        saveSelectedModel(selModel.value);
+      }
       var keys = ta
         ? ta.value
             .split("\n")
-            .map(function (k) { return k.trim(); })
+            .map(function (k) {
+              return k.trim()
+                .replace(/^['"]+|['",;]+$/g, "")
+                .replace(/^(?:api[_\s-]?key\s*[:=]\s*)/i, "")
+                .trim();
+            })
             .filter(Boolean)
         : [];
       state.geminiKeys = keys;
       state.geminiKeyIdx = 0;
       state.geminiStatus = "idle";
       state.geminiMsg = keys.length
-        ? keys.length + " key tersimpan."
+        ? keys.length + " key tersimpan (Model: " + (state.selectedModel || "gemini-1.5-flash") + ")."
         : "Belum ada key.";
       saveGeminiKeys(keys);
       render();
+    } else if (a === "save-ai-knowledge") {
+      var taK = $("#ai-knowledge-base");
+      if (taK) {
+        state.aiKnowledge = taK.value;
+        saveKnowledge(taK.value);
+        alert("Sumber Dokumen AI (Knowledge Base) berhasil disimpan! AI akan menggunakannya sebagai acuan rujukan.");
+        render();
+      }
+    } else if (a === "reset-ai-knowledge") {
+      if (confirm("Kembalikan dokumen sumber AI ke teks referensi standar (7 Butir Komitmen)?")) {
+        state.aiKnowledge = DEFAULT_KNOWLEDGE;
+        saveKnowledge(DEFAULT_KNOWLEDGE);
+        render();
+      }
     } else if (a === "test-gemini") {
       var ta = $("#gemini-keys");
+      var selModel = $("#ai-model-select");
+      if (selModel) {
+        state.selectedModel = selModel.value;
+        saveSelectedModel(selModel.value);
+      }
       if (ta) {
         var inputKeys = ta.value
           .split("\n")
-          .map(function (k) { return k.trim(); })
+          .map(function (k) {
+            return k.trim()
+              .replace(/^['"]+|['",;]+$/g, "")
+              .replace(/^(?:api[_\s-]?key\s*[:=]\s*)/i, "")
+              .trim();
+          })
           .filter(Boolean);
         if (inputKeys.length) {
           state.geminiKeys = inputKeys;
@@ -2426,21 +2645,38 @@
         render();
         return;
       }
+      var testModel = state.selectedModel || "gemini-1.5-flash";
       state.geminiStatus = "testing";
-      state.geminiMsg = "Menguji koneksi ke Google Gemini AI…";
+      state.geminiMsg = "Menguji koneksi model " + testModel + "…";
       render();
       callGemini(
-        "Balas dengan satu kalimat singkat dalam bahasa Indonesia bahwa koneksi berhasil."
+        "Balas dengan satu kalimat singkat dalam bahasa Indonesia bahwa koneksi model " + testModel + " berhasil.",
+        "Kamu adalah asisten AI yang membalas singkat.",
+        true // strictly test selected model
       )
         .then(function (result) {
           state.geminiStatus = "ok";
           state.geminiMsg =
-            "Berhasil terhubung! Balasan AI: \"" + result.trim().slice(0, 160) + "\"";
+            "Berhasil terhubung! (" + testModel + ") Balasan AI: \"" + result.trim().slice(0, 160) + "\"";
           render();
         })
         .catch(function (err) {
           state.geminiStatus = "error";
-          state.geminiMsg = "Gagal: " + (err.message || String(err));
+          var rawMsg = err.message || String(err);
+          var friendlyTip = "";
+          if (/no longer available|not found|unsupported/i.test(rawMsg)) {
+            friendlyTip = "<br><small><b>Penyebab:</b> Model [" + esc(testModel) + "] sudah tidak didukung/tersedia oleh Google. Silakan pilih <b>Gemini 1.5 Flash</b> atau <b>Gemini 3.5 Flash Lite</b> pada dropdown di atas lalu klik Tes lagi.</small>";
+          } else if (/API key not valid/i.test(rawMsg)) {
+            friendlyTip = "<br><small><b>Penyebab:</b> API Key tidak valid. Pastikan Anda menyalin API Key dari <a href='https://aistudio.google.com/' target='_blank' style='color:inherit;text-decoration:underline;'>Google AI Studio (aistudio.google.com)</a>, <u>BUKAN</u> Web API Key dari Firebase.</small>";
+          } else if (/Generative Language API has not been used/i.test(rawMsg) || /disabled/i.test(rawMsg)) {
+            friendlyTip = "<br><small><b>Penyebab:</b> Layanan AI belum aktif di project Google tersebut. Buka <a href='https://aistudio.google.com/' target='_blank' style='color:inherit;text-decoration:underline;'>Google AI Studio</a>, klik <b>Get API key</b> lalu pilih <b>Create API key in new project</b>.</small>";
+          } else if (/location|region|not supported/i.test(rawMsg)) {
+            friendlyTip = "<br><small><b>Penyebab:</b> Lokasi IP internet tidak didukung. Pastikan tidak memakai VPN ke negara yang diblokir.</small>";
+          } else if (/429|quota|rate limit/i.test(rawMsg)) {
+            friendlyTip = "<br><small><b>Penyebab:</b> Batas kuota per menit sedang penuh. Tunggu 30 detik lalu klik tes lagi.</small>";
+          }
+          state.geminiMsg = "Gagal: " + rawMsg + friendlyTip;
+          render();
           render();
         });
     } else if (a === "generate-ai-penguat") {
@@ -2458,7 +2694,7 @@
       var cb = $("#ai-penguat-content");
       if (cb) {
         cb.innerHTML =
-          '<span class="muted" style="display:inline-flex;align-items:center;gap:6px;"><i data-lucide="loader" class="spin"></i> Meramu respon penguat dari Data Sekolah, YouTube & Instagram…</span>';
+          '<span class="muted" style="display:inline-flex;align-items:center;gap:6px;"><i data-lucide="loader" class="spin"></i> Meramu respon penguat dari Dokumen Sekolah, YouTube & Instagram…</span>';
         if (window.lucide) lucide.createIcons();
       }
       var prompt =
@@ -2466,9 +2702,9 @@
         "Pewawancara sedang mewawancarai " + sap() + " dari calon murid bernama " + (state.profile.anak || "ananda") + ".\n" +
         "Pertanyaan: \"" + fill(q.q) + "\"\n" +
         "Jawaban orang tua: \"" + answer + "\"\n\n" +
-        "Tugas: Buatkan 1-2 kalimat respon lisan (talking point) penguat yang hangat, empatik, dan meyakinkan untuk langsung diucapkan pewawancara.\n" +
+        "Tugas (Grounding ala NotebookLM): Buatkan 1-2 kalimat respon lisan (talking point) penguat yang hangat, empatik, dan meyakinkan untuk langsung diucapkan pewawancara.\n" +
         "Ketentuan:\n" +
-        "1. Kuatkan keputusan orang tua dengan mengaitkan keunggulan SD Anak Saleh (sekolah Islam ramah anak, pembiasaan ibadah harian, penegakan adab anti-bully, 7 komitmen kemitraan).\n" +
+        "1. Kuatkan keputusan orang tua dengan mengaitkan butir komitmen atau keunggulan SD Anak Saleh dari Sumber Dokumen Sekolah.\n" +
         "2. Sebutkan secara natural bahwa orang tua juga dapat melihat bukti dokumentasinya di video profil YouTube SD Anak Saleh atau Instagram resmi @sdanaksalehofficial jika relevan.\n" +
         "3. Berikan HANYA kalimat siap ucap (tanpa tanda petik, tanpa kata pengantar).";
 
@@ -2480,7 +2716,7 @@
             box.innerHTML =
               '<div style="font-weight:500;margin-bottom:4px;color:var(--text-main,#0f172a);">“' +
               esc(res.trim()) +
-              '”</div><div style="font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;"><span class="badge ok" style="font-size:9px;padding:1px 4px;"><i data-lucide="check"></i> Siap Diucapkan</span> Didukung YouTube & Instagram</div>';
+              '”</div><div style="font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;"><span class="badge ok" style="font-size:9px;padding:1px 4px;"><i data-lucide="check"></i> Siap Diucapkan</span> Berbasis Sumber Dokumen Sekolah (' + esc(state.selectedModel) + ')</div>';
             if (window.lucide) lucide.createIcons();
           }
         })
@@ -2511,8 +2747,8 @@
       }).join("\n\n");
 
       var promptFull =
-        "Kamu adalah konsultan ahli PPDB SD Anak Saleh Malang.\n" +
-        "Lakukan analisis mendalam atas hasil wawancara calon orang tua murid berikut:\n\n" +
+        "Kamu adalah konsultan ahli PPDB SD Anak Saleh Malang dengan kemampuan grounding seperti Google NotebookLM.\n" +
+        "Lakukan analisis mendalam atas hasil wawancara calon orang tua murid dengan MEMBANDINGKAN DAN MENCOCOKKAN JAWABAN ORANG TUA TERHADAP SUMBER DOKUMEN SEKOLAH.\n\n" +
         "Calon Murid: " +
         (state.profile.anak || "-") +
         "\n" +
@@ -2530,17 +2766,16 @@
         "Tanya Jawab Wawancara:\n" +
         summaryAll +
         "\n\n" +
-        "Data Referensi Resmi SD Anak Saleh:\n" +
-        "- Profil: SD Anak Saleh Malang (Sekolah Ramah Anak, Unggul Agama & Karakter)\n" +
-        "- 7 Komitmen: Bijak Medsos, Dress code syar'i antar/jemput, Saluran saran resmi humas, Sinkronisasi shalat/tadarus di rumah, Penegakan adab anti-bully, Disiplin kehadiran pagi, Pembatasan gadget rumah.\n" +
-        "- Media Resmi: YouTube Profil (https://youtu.be/Wttuw8v2-ME) dan Instagram (@sdanaksalehofficial - https://www.instagram.com/sdanaksalehofficial/).\n\n" +
+        "Media Resmi Sekolah:\n" +
+        "- Video Profil YouTube: " + (state.school.youtube || "https://youtu.be/Wttuw8v2-ME") + "\n" +
+        "- Akun Instagram Resmi: " + (state.school.instagram || "https://www.instagram.com/sdanaksalehofficial/") + "\n\n" +
         "Format Output (Wajib ikuti persis 3 bagian di bawah dengan heading markdown ###):\n\n" +
-        "### 1. Narasi Profil & Keselarasan Nilai Keluarga\n" +
-        "(1-2 paragraf hangat tentang keselarasan harapan orang tua dengan iklim belajar di SD Anak Saleh)\n\n" +
-        "### 2. Catatan Khusus untuk Wali Kelas / Guru Pendamping\n" +
-        "(3-4 poin rekomendasi konkret mengenai adaptasi, kebiasaan, dan pendampingan yang dibutuhkan ananda saat mulai bersekolah)\n\n" +
+        "### 1. Narasi Profil & Keselarasan dengan Dokumen Sekolah (NotebookLM Grounding)\n" +
+        "(1-2 paragraf hangat tentang keselarasan harapan orang tua dengan iklim belajar di SD Anak Saleh. Sebutkan secara eksplisit butir komitmen atau aturan sekolah yang sangat selaras dari Dokumen Sumber, misal [Butir 1: Bijak Medsos], [Butir 4: Ibadah Harian], dll.)\n\n" +
+        "### 2. Catatan Khusus & Rekomendasi untuk Wali Kelas / Tim PPDB\n" +
+        "(3-4 poin rekomendasi konkret mengenai potensi anak, hal yang perlu ditegaskan bersama orang tua sesuai aturan sekolah, serta pendampingan awal masuk sekolah)\n\n" +
         "### 3. Draf Pesan WhatsApp Apresiasi untuk Orang Tua\n" +
-        "(Draf pesan WhatsApp ramah dan islami untuk dikirimkan pewawancara kepada orang tua. Ucapkan terima kasih, tegaskan komitmen sinergi, serta sertakan link video profil YouTube https://youtu.be/Wttuw8v2-ME dan Instagram https://www.instagram.com/sdanaksalehofficial/ agar keluarga bisa melihat dokumentasi pembiasaan sekolah bersama di rumah)";
+        "(Draf pesan WhatsApp ramah dan islami untuk dikirimkan pewawancara kepada orang tua. Ucapkan terima kasih, tegaskan komitmen sinergi, serta sertakan link video profil YouTube " + (state.school.youtube || "https://youtu.be/Wttuw8v2-ME") + " dan Instagram " + (state.school.instagram || "https://www.instagram.com/sdanaksalehofficial/") + " agar keluarga bisa melihat dokumentasi pembiasaan sekolah bersama di rumah)";
 
       callGemini(promptFull)
         .then(function (text) {
