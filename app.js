@@ -486,16 +486,19 @@
 
   /* ---------- Data Pewawancara & Calon Murid ---------- */
   var INTERVIEWERS = [
-    "Ustadzah Fatimah",
-    "Ustadzah Nurul",
-    "Ustadz Ahmad",
-    "Ustadzah Aisyah",
-    "Ustadz Ridwan",
-    "Ustadzah Khadijah",
-    "Ustadz Fauzi",
-    "Ustadzah Maryam",
-    "Ustadz Hasan",
-    "Ustadzah Salma",
+    "Ustadz Rama",
+    "Ustadz Rifa’i",
+    "Ustadz Andre",
+    "Ustadz Effendi",
+    "Ustadzah Jehan",
+    "Ustadzah Dian",
+    "Ustadz Amir",
+    "Ustadzah Ika",
+    "Ustadzah Niha",
+    "Ustadz Riris",
+    "Ustadzah Heni",
+    "Ustadz Ichsan",
+    "Ustadz Davies"
   ];
 
   var candidatesData = [];
