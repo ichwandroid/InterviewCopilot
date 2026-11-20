@@ -41,7 +41,7 @@
         display: none !important;
       }
     </style>
-    <link rel="stylesheet" href="styles.css?v=2.3">
+    <link rel="stylesheet" href="styles.css?v=2.5">
   </head>
   <body>
     <div class="wrap">
@@ -91,11 +91,112 @@
       <main id="view"></main>
     </div>
 
+    <!-- Modal Import Calon Murid -->
+    <div class="modal-backdrop" id="modal-import" style="display:none;" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title">
+            <i data-lucide="file-spreadsheet" style="color:var(--primary);width:20px;height:20px;"></i>
+            Import Data Calon Murid
+          </div>
+          <button type="button" class="combobox-tool-btn" data-action="close-import-modal" title="Tutup">
+            <i data-lucide="x" style="width:18px;height:18px;"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Download Template Section -->
+          <div style="background:var(--soft);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+              <div>
+                <strong style="font-size:13px;color:var(--foreground);">📄 Unduh Template Calon Murid</strong>
+                <p class="muted" style="font-size:11.5px;margin:2px 0 0;">Format kolom: <code>id, anak, ayah, ibu, alamat, sapaan</code></p>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button type="button" class="btn btn-outline btn-sm" data-action="download-template-excel" style="font-size:11.5px;padding:4px 8px;">
+                  <i data-lucide="sheet" style="width:13px;height:13px;"></i> Excel (.xlsx)
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" data-action="download-template-csv" style="font-size:11.5px;padding:4px 8px;">
+                  <i data-lucide="file-text" style="width:13px;height:13px;"></i> CSV (.csv)
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" data-action="download-template-json" style="font-size:11.5px;padding:4px 8px;">
+                  <i data-lucide="code" style="width:13px;height:13px;"></i> JSON (.json)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- File Upload Dropzone -->
+          <div class="import-dropzone" id="import-dropzone">
+            <i data-lucide="upload-cloud" style="width:32px;height:32px;color:var(--primary);opacity:0.85;"></i>
+            <div style="font-size:13px;font-weight:600;color:var(--foreground);">Pilih atau seret file ke sini</div>
+            <div class="muted" style="font-size:11.5px;">Mendukung format <b>Excel (.xlsx, .xls)</b>, <b>CSV (.csv)</b>, atau <b>JSON (.json)</b></div>
+            <input type="file" id="input-import-file" accept=".xlsx,.xls,.csv,.json" style="display:none;">
+            <button type="button" class="btn btn-primary btn-sm" id="btn-browse-file" style="margin-top:4px;">
+              <i data-lucide="folder-open" style="width:14px;height:14px;"></i> Pilih File Komputer
+            </button>
+          </div>
+
+          <!-- Quick Paste Area (Collapsible / Alternative) -->
+          <details style="border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;font-size:12.5px;">
+            <summary style="cursor:pointer;font-weight:500;color:var(--muted-foreground);">
+              📋 Atau Salin & Tempel langsung (dari Excel / Google Sheets / JSON)
+            </summary>
+            <div style="margin-top:8px;">
+              <textarea class="textarea" id="import-paste-text" style="min-height:90px;font-family:var(--font-mono);font-size:11.5px;" placeholder="Tempel baris data dari spreadsheet di sini (termasuk baris header)..."></textarea>
+              <div style="display:flex;justify-content:flex-end;margin-top:6px;">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-parse-paste">
+                  <i data-lucide="play" style="width:13px;height:13px;"></i> Muat Teks
+                </button>
+              </div>
+            </div>
+          </details>
+
+          <!-- Preview Area (Hidden by default) -->
+          <div id="import-preview-area" style="display:none;">
+            <div class="row between" style="align-items:center;margin-bottom:6px;">
+              <strong style="font-size:12.5px;color:var(--foreground);" id="import-preview-count">Pratinjau Data (0 Calon Murid)</strong>
+              <div style="font-size:11.5px;display:flex;gap:12px;align-items:center;">
+                <label style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                  <input type="radio" name="import-mode" value="merge" checked> Gabungkan (Merge)
+                </label>
+                <label style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                  <input type="radio" name="import-mode" value="replace"> Ganti Semua (Replace)
+                </label>
+              </div>
+            </div>
+            <div class="preview-table-wrap">
+              <table class="preview-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nama Anak</th>
+                    <th>Ayah</th>
+                    <th>Ibu</th>
+                    <th>Alamat</th>
+                  </tr>
+                </thead>
+                <tbody id="import-preview-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="err" id="import-err" style="display:none;font-size:12px;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline btn-sm" data-action="close-import-modal">Batal</button>
+          <button type="button" class="btn btn-primary btn-sm" id="btn-commit-import" disabled>
+            <i data-lucide="check"></i> Simpan Data Calon Murid
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
-    <script src="app.js?v=3.0"></script>
+    <script src="app.js?v=3.4"></script>
   </body>
 </html>

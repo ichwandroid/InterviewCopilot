@@ -504,22 +504,29 @@
 
   var candidatesData = [];
   function loadCandidates() {
+    // 1. Prioritas: gunakan override dari localStorage (hasil import)
+    try {
+      var override = localStorage.getItem("sas-candidates-override-v1");
+      if (override) {
+        var parsed = JSON.parse(override);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          candidatesData = parsed;
+          if (state.tab === "interview" && state.step === 0) render();
+          return;
+        }
+      }
+    } catch (e) {}
+    // 2. Fallback: fetch dari file candidates.json
     try {
       fetch("candidates.json")
-        .then(function (r) {
-          return r.json();
-        })
+        .then(function (r) { return r.json(); })
         .then(function (data) {
           if (Array.isArray(data) && data.length > 0) {
             candidatesData = data;
-            if (state.tab === "interview" && state.step === 0) {
-              render();
-            }
+            if (state.tab === "interview" && state.step === 0) render();
           }
         })
-        .catch(function (e) {
-          console.warn("loadCandidates fallback:", e);
-        });
+        .catch(function (e) { console.warn("loadCandidates fallback:", e); });
     } catch (e) {}
   }
 
@@ -528,6 +535,22 @@
   var KEY_GEMINI = "sas-gemini-keys-v1";
   var KEY_MODEL = "sas-gemini-model-v1";
   var KEY_KNOWLEDGE = "sas-ai-knowledge-v1";
+  var KEY_LAST_INTERVIEWER = "sas-last-interviewer-v1";
+
+  function loadLastInterviewer() {
+    try {
+      var name = localStorage.getItem(KEY_LAST_INTERVIEWER);
+      if (name && name.trim()) return name.trim();
+    } catch (e) {}
+    return "";
+  }
+  function saveLastInterviewer(name) {
+    try {
+      if (name && name.trim()) {
+        localStorage.setItem(KEY_LAST_INTERVIEWER, name.trim());
+      }
+    } catch (e) {}
+  }
 
   var DEFAULT_KNOWLEDGE = [
     "# Referensi Data Komitmen & Penguat Sekolah (SD Anak Saleh)",
@@ -796,7 +819,7 @@
       ibu: "",
       ortu: "",
       alamat: "",
-      pewawancara: "",
+      pewawancara: loadLastInterviewer(),
       sapaan: "Ayah/Bunda",
     },
     answers: [],
@@ -1267,12 +1290,220 @@
     );
   }
 
+  function highlightMatch(text, query) {
+    if (!text) return "";
+    var str = String(text);
+    if (!query) return esc(str);
+    var q = query.trim();
+    if (!q) return esc(str);
+    var idx = str.toLowerCase().indexOf(q.toLowerCase());
+    if (idx === -1) return esc(str);
+    return (
+      esc(str.slice(0, idx)) +
+      '<mark class="combobox-highlight">' +
+      esc(str.slice(idx, idx + q.length)) +
+      "</mark>" +
+      esc(str.slice(idx + q.length))
+    );
+  }
+
+  function renderCandidateComboboxItems(query, activeId) {
+    var q = (query || "").trim().toLowerCase();
+    var filtered = candidatesData;
+    if (q) {
+      filtered = candidatesData.filter(function (c) {
+        return (
+          (c.id && c.id.toLowerCase().indexOf(q) >= 0) ||
+          (c.anak && c.anak.toLowerCase().indexOf(q) >= 0) ||
+          (c.ayah && c.ayah.toLowerCase().indexOf(q) >= 0) ||
+          (c.ibu && c.ibu.toLowerCase().indexOf(q) >= 0) ||
+          (c.ortu && c.ortu.toLowerCase().indexOf(q) >= 0) ||
+          (c.alamat && c.alamat.toLowerCase().indexOf(q) >= 0)
+        );
+      });
+    }
+
+    var html = [];
+    html.push(
+      '<div class="combobox-item combobox-manual-item' +
+        (activeId === "manual" ? " active" : "") +
+        '" data-candidate-id="manual">' +
+        '<div class="combobox-item-top">' +
+        '<span class="badge" style="font-size:11px;background:var(--soft);color:var(--primary);border:none;">Manual</span>' +
+        '<strong class="combobox-item-name">Isi Manual / Tanpa ID (Murid Baru)</strong>' +
+        "</div>" +
+        '<div class="combobox-item-sub">Ketik data calon murid langsung di formulir</div>' +
+        "</div>"
+    );
+
+    if (filtered.length === 0) {
+      html.push(
+        '<div class="combobox-empty">' +
+          '<div style="font-size:13px;font-weight:500;">Tidak ditemukan kandidat dengan "' +
+          esc(query) +
+          '"</div>' +
+          '<div style="font-size:11.5px;color:var(--muted-foreground);">Calon murid baru belum ada di daftar.</div>' +
+          '<button type="button" class="btn btn-sm" id="btn-use-manual" style="margin-top:4px;padding:4px 10px;font-size:12px;" data-candidate-id="manual">Gunakan Input Manual</button>' +
+          "</div>"
+      );
+    } else {
+      var slice = filtered.slice(0, 40);
+      slice.forEach(function (c) {
+        var labelOrtu =
+          c.ayah && c.ibu
+            ? "Ayah " + c.ayah + " & Bunda " + c.ibu
+            : c.ortu || "";
+        var shortAlamat = c.alamat ? c.alamat.split(",")[0] : "";
+        html.push(
+          '<div class="combobox-item' +
+            (activeId === c.id ? " active" : "") +
+            '" data-candidate-id="' +
+            esc(c.id) +
+            '">' +
+            '<div class="combobox-item-top">' +
+            '<span class="combobox-id-badge">' +
+            highlightMatch(c.id, query) +
+            "</span>" +
+            '<strong class="combobox-item-name">' +
+            highlightMatch(c.anak, query) +
+            "</strong>" +
+            "</div>" +
+            '<div class="combobox-item-sub">' +
+            "<span>" +
+            (labelOrtu ? highlightMatch(labelOrtu, query) : "-") +
+            "</span>" +
+            (shortAlamat
+              ? '<span class="combobox-bullet">·</span><span class="combobox-alamat">' +
+                esc(shortAlamat) +
+                "</span>"
+              : "") +
+            "</div>" +
+            "</div>"
+        );
+      });
+    }
+
+    var dropdown = $("#candidate-dropdown");
+    if (dropdown) {
+      dropdown.innerHTML = html.join("");
+    }
+    var countBadge = $("#candidate-count-badge");
+    if (countBadge) {
+      countBadge.textContent = q
+        ? filtered.length + " dari " + candidatesData.length + " kandidat"
+        : candidatesData.length + " kandidat";
+    }
+  }
+
+  function openCandidateDropdown(query) {
+    var dropdown = $("#candidate-dropdown");
+    if (!dropdown) return;
+    renderCandidateComboboxItems(query, state.profile.id);
+    dropdown.style.display = "block";
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function closeCandidateDropdown() {
+    var dropdown = $("#candidate-dropdown");
+    if (dropdown) dropdown.style.display = "none";
+  }
+
+  function selectCandidateById(id) {
+    closeCandidateDropdown();
+    var inp = $("#candidate-search-input");
+    var clearBtn = $("#candidate-clear-btn");
+    var hiddenId = $("#p-id");
+
+    if (!id || id === "manual") {
+      state.profile.id = "";
+      state.profile.anak = "";
+      state.profile.ayah = "";
+      state.profile.ibu = "";
+      state.profile.alamat = "";
+      state.profile.ortu = "";
+      state.profile.sapaan = "Ayah/Bunda";
+
+      if (hiddenId) hiddenId.value = "";
+      if (inp) {
+        inp.value = "";
+        inp.placeholder = "Mode: Isi Manual (Tanpa ID)";
+      }
+      if (clearBtn) clearBtn.style.display = "none";
+
+      var elAnak = $("#p-anak");
+      var elAyah = $("#p-ayah");
+      var elIbu = $("#p-ibu");
+      var elAlamat = $("#p-alamat");
+      if (elAnak) {
+        elAnak.value = "";
+        elAnak.focus();
+      }
+      if (elAyah) elAyah.value = "";
+      if (elIbu) elIbu.value = "";
+      if (elAlamat) elAlamat.value = "";
+      return;
+    }
+
+    var found = candidatesData.filter(function (c) {
+      return c.id === id;
+    })[0];
+    if (found) {
+      state.profile.id = found.id;
+      state.profile.anak = found.anak || "";
+      state.profile.alamat = found.alamat || "";
+
+      if (found.ayah) {
+        state.profile.ayah = found.ayah;
+      } else if (found.ortu && /^ayah/i.test(found.ortu)) {
+        state.profile.ayah = found.ortu.replace(/^ayah\s*/i, "");
+      } else {
+        state.profile.ayah = "";
+      }
+
+      if (found.ibu) {
+        state.profile.ibu = found.ibu;
+      } else if (found.ortu && /^(bunda|ibu)/i.test(found.ortu)) {
+        state.profile.ibu = found.ortu.replace(/^(bunda|ibu)\s*/i, "");
+      } else {
+        state.profile.ibu = "";
+      }
+
+      state.profile.ortu = computeOrtu(state.profile);
+      state.profile.sapaan = sap(state.profile);
+
+      if (hiddenId) hiddenId.value = found.id;
+      if (inp) {
+        inp.value = found.anak + " (" + found.id + ")";
+      }
+      if (clearBtn) clearBtn.style.display = "";
+
+      var elAnak = $("#p-anak");
+      var elAyah = $("#p-ayah");
+      var elIbu = $("#p-ibu");
+      var elAlamat = $("#p-alamat");
+      if (elAnak) elAnak.value = state.profile.anak;
+      if (elAyah) elAyah.value = state.profile.ayah;
+      if (elIbu) elIbu.value = state.profile.ibu;
+      if (elAlamat) elAlamat.value = state.profile.alamat;
+    }
+  }
+
   function startView() {
     var s = state.school,
       p = state.profile;
     var ver = s.items.filter(function (i) {
       return i.verified;
     }).length;
+
+    var selCand = (candidatesData || []).filter(function (c) {
+      return c.id === p.id;
+    })[0];
+    var initialSearchVal = selCand
+      ? selCand.anak + " (" + selCand.id + ")"
+      : p.anak
+      ? p.anak + (p.id ? " (" + p.id + ")" : "")
+      : "";
+
     return (
       '<div class="stack">' +
       '<div class="stack" data-anim="in"><span class="eyebrow">Wawancara calon orang tua murid</span>' +
@@ -1282,30 +1513,43 @@
       ". Setiap jawaban dicocokkan dengan data sekolah, lalu aplikasi menyusun ringkasan yang menguatkan keputusan mereka.</p></div>" +
       '<div class="grid">' +
       '<form class="card" id="start-form" data-anim="in" novalidate>' +
-      '<div class="card-title">Mulai sesi baru</div>' +
-      '<div class="two"><div class="field"><label for="p-id">ID Calon Murid</label>' +
-      '<select class="select" id="p-id" data-profile="id">' +
-      '<option value="">-- Pilih ID Calon Murid --</option>' +
-      candidatesData
-        .map(function (c) {
-          var labelOrtu = c.ayah && c.ibu ? "Ayah " + c.ayah + " & Bunda " + c.ibu : (c.ortu || "");
-          return (
-            '<option value="' +
-            esc(c.id) +
-            '"' +
-            (p.id === c.id ? " selected" : "") +
-            '>' +
-            esc(c.id) +
-            ' – ' +
-            esc(c.anak) +
-            (labelOrtu ? ' (' + esc(labelOrtu) + ')' : '') +
-            '</option>'
-          );
-        })
-        .join("") +
-      '<option value="manual"' + (p.id === "manual" ? " selected" : "") + '>-- Isi Manual / Tanpa ID --</option>' +
-      '</select></div>' +
-      '<div class="field"><label for="p-anak">Nama calon murid</label>' +
+      '<div class="row between" style="align-items:center;margin-bottom:12px;">' +
+      '<div class="card-title" style="margin-bottom:0;">Mulai sesi baru</div>' +
+      '<span class="muted" style="font-size:11px;"><span style="color:var(--danger,#ef4444);font-weight:bold;">*</span> Wajib diisi</span>' +
+      '</div>' +
+      '<div class="two">' +
+      '<div class="field" style="position:relative;">' +
+      '<div class="row between" style="align-items:center;margin-bottom:4px;">' +
+      '<label for="candidate-search-input" style="margin-bottom:0;">Cari & Pilih Calon Murid</label>' +
+      '<span class="muted" style="font-size:11px;" id="candidate-count-badge">' +
+      (candidatesData.length ? candidatesData.length + " kandidat" : "") +
+      "</span>" +
+      "</div>" +
+      '<div class="combobox-wrap" id="candidate-combobox">' +
+      '<div class="combobox-input-wrap">' +
+      '<i data-lucide="search" class="combobox-search-icon"></i>' +
+      '<input type="text" class="input combobox-input" id="candidate-search-input" placeholder="Ketik nama anak, ID, atau nama orang tua..." autocomplete="off" value="' +
+      esc(initialSearchVal) +
+      '">' +
+      '<div class="combobox-tools">' +
+      '<button type="button" class="combobox-tool-btn" id="candidate-clear-btn" title="Hapus pencarian / Reset" style="' +
+      (initialSearchVal ? "" : "display:none;") +
+      '">' +
+      '<i data-lucide="x" style="width:14px;height:14px;"></i>' +
+      "</button>" +
+      '<button type="button" class="combobox-tool-btn" id="candidate-toggle-btn" title="Buka daftar pilihan">' +
+      '<i data-lucide="chevron-down" style="width:15px;height:15px;"></i>' +
+      "</button>" +
+      "</div>" +
+      "</div>" +
+      '<input type="hidden" id="p-id" data-profile="id" value="' +
+      esc(p.id || "") +
+      '">' +
+      '<div class="combobox-dropdown" id="candidate-dropdown" style="display:none;" role="listbox"></div>' +
+      "</div>" +
+      '<div class="muted" style="font-size:11px;margin-top:2px;">💡 Ketik untuk mencari atau klik dropdown untuk melihat daftar.</div>' +
+      "</div>" +
+      '<div class="field"><label for="p-anak">Nama calon murid <span style="color:var(--danger,#ef4444);font-weight:bold;">*</span></label>' +
       '<input class="input" id="p-anak" data-profile="anak" value="' +
       esc(p.anak) +
       '" placeholder="Nama calon murid..." autocomplete="off"></div></div>' +
@@ -1321,7 +1565,7 @@
       '<input class="input" id="p-alamat" data-profile="alamat" value="' +
       esc(p.alamat || "") +
       '" placeholder="Alamat domisili keluarga..." autocomplete="off"></div>' +
-      '<div class="field"><label for="p-pew">Nama pewawancara</label>' +
+      '<div class="field"><label for="p-pew">Nama pewawancara <span style="color:var(--danger,#ef4444);font-weight:bold;">*</span></label>' +
       '<select class="select" id="p-pew" data-profile="pewawancara">' +
       '<option value="">-- Pilih Pewawancara --</option>' +
       INTERVIEWERS.map(function (name) {
@@ -1341,7 +1585,8 @@
       "</div>" +
       '<div class="row"><button type="submit" class="btn btn-primary" data-action="start"><i data-lucide="play"></i> Mulai wawancara</button><span class="muted">' +
       N +
-      " pertanyaan, sekitar 10 menit</span></div>" +
+      " pertanyaan, sekitar 10 menit</span>" +
+      '<button type="button" class="btn btn-outline btn-sm" data-action="open-import-modal" style="margin-left:auto;" title="Import daftar calon murid dari Excel/CSV/JSON"><i data-lucide="upload-cloud" style="width:14px;height:14px;"></i> Import</button></div>' +
       "</form>" +
       '<aside class="panel" data-anim="in"><div class="panel-head"><span class="card-title">Data sekolah terhubung</span><span class="badge"><i data-lucide="hard-drive"></i> Tersimpan di browser ini</span></div>' +
       '<div class="item"><div class="item-title">' +
@@ -1860,6 +2105,16 @@
       '<input type="file" id="upload-knowledge" accept=".txt,.md" style="display:none;">' +
       '</label>' +
       '</div></div></div>' +
+      '<div class="card" data-anim="in">' +
+      '<div class="row between" style="margin-bottom:12px;align-items:center;">' +
+      '<span class="card-title" style="display:flex;align-items:center;gap:8px;"><i data-lucide="users" style="color:var(--primary);"></i> Daftar Calon Murid</span>' +
+      '<div class="row" style="gap:6px;">' +
+      '<span class="muted" style="font-size:12px;align-self:center;">' + candidatesData.length + ' kandidat terdaftar</span>' +
+      '<button class="btn btn-primary btn-sm" data-action="open-import-modal"><i data-lucide="upload-cloud"></i> Import Calon Murid</button>' +
+      '</div>' +
+      '</div>' +
+      '<p class="muted" style="font-size:12.5px;margin-bottom:0;">Unggah file Excel, CSV, atau JSON untuk memperbarui daftar calon murid. Mendukung format merge (tambahkan baru) atau replace (ganti semua).</p>' +
+      '</div>' +
       '<div class="card" data-anim="in"><div class="card-title">Profil sekolah</div>' +
       '<div class="two">' +
       f("sf-name", "Nama sekolah", "name") +
@@ -2242,6 +2497,24 @@
     if (t.id === "p-id") {
       state.profile.id = t.value === "manual" ? "" : t.value.trim();
       if (!val || val === "manual") {
+        // Reset seluruh data calon murid saat memilih mode manual atau kosong
+        state.profile.anak = "";
+        state.profile.ayah = "";
+        state.profile.ibu = "";
+        state.profile.alamat = "";
+        state.profile.ortu = "";
+        state.profile.sapaan = "Ayah/Bunda";
+        var elAnak = $("#p-anak");
+        var elAyah = $("#p-ayah");
+        var elIbu = $("#p-ibu");
+        var elAlamat = $("#p-alamat");
+        if (elAnak) {
+          elAnak.value = "";
+          if (val === "manual") elAnak.focus();
+        }
+        if (elAyah) elAyah.value = "";
+        if (elIbu) elIbu.value = "";
+        if (elAlamat) elAlamat.value = "";
         return;
       }
       var found = candidatesData.filter(function (c) {
@@ -2295,6 +2568,62 @@
   }
 
   /* ---------- Events ---------- */
+  document.addEventListener("focusin", function (e) {
+    if (e.target && e.target.id === "candidate-search-input") {
+      openCandidateDropdown(e.target.value);
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    var inp = $("#candidate-search-input");
+    var dropdown = $("#candidate-dropdown");
+    if (!inp || !dropdown) return;
+
+    if (e.target === inp) {
+      var items = dropdown.querySelectorAll(".combobox-item");
+      var activeEl = dropdown.querySelector(".combobox-item.active");
+      var curIdx = -1;
+      items.forEach(function (el, idx) {
+        if (el === activeEl) curIdx = idx;
+      });
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (dropdown.style.display === "none") {
+          openCandidateDropdown(inp.value);
+        } else if (items.length > 0) {
+          var nextIdx = curIdx + 1;
+          if (nextIdx >= items.length) nextIdx = 0;
+          if (activeEl) activeEl.classList.remove("active");
+          items[nextIdx].classList.add("active");
+          items[nextIdx].scrollIntoView({ block: "nearest" });
+        }
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (dropdown.style.display !== "none" && items.length > 0) {
+          var prevIdx = curIdx - 1;
+          if (prevIdx < 0) prevIdx = items.length - 1;
+          if (activeEl) activeEl.classList.remove("active");
+          items[prevIdx].classList.add("active");
+          items[prevIdx].scrollIntoView({ block: "nearest" });
+        }
+      } else if (e.key === "Enter") {
+        if (dropdown.style.display !== "none") {
+          e.preventDefault();
+          if (activeEl) {
+            var cid = activeEl.getAttribute("data-candidate-id");
+            selectCandidateById(cid);
+          } else if (items.length > 0) {
+            var cid = items[0].getAttribute("data-candidate-id");
+            selectCandidateById(cid);
+          }
+        }
+      } else if (e.key === "Escape") {
+        closeCandidateDropdown();
+      }
+    }
+  });
+
   document.addEventListener("input", function (e) {
     var t = e.target;
     if (t.id === "answer") {
@@ -2313,6 +2642,14 @@
         el.style.display =
           el.textContent.toLowerCase().indexOf(q) >= 0 ? "" : "none";
       });
+    } else if (t.id === "candidate-search-input") {
+      openCandidateDropdown(t.value);
+      var clearBtn = $("#candidate-clear-btn");
+      if (clearBtn) {
+        clearBtn.style.display = t.value.trim() ? "" : "none";
+      }
+    } else if (t.id === "p-pew") {
+      saveLastInterviewer(t.value);
     } else if (t.id === "p-id" || t.id === "p-anak" || t.id === "p-ayah" || t.id === "p-ibu" || t.id === "p-alamat") {
       handleCandidateAutocomplete(t);
     } else if (t.getAttribute && t.getAttribute("data-profile")) {
@@ -2347,6 +2684,8 @@
         alert("Dokumen sumber AI berhasil dimuat dari file! Estimasi: ~" + estimateTokens(state.aiKnowledge) + " tokens.");
       };
       reader.readAsText(t.files[0]);
+    } else if (t && t.id === "p-pew") {
+      saveLastInterviewer(t.value);
     } else if (t && (t.id === "p-id" || t.id === "p-anak" || t.id === "p-ayah" || t.id === "p-ibu" || t.id === "p-alamat")) {
       handleCandidateAutocomplete(t);
     } else if (t && t.getAttribute && t.getAttribute("data-profile")) {
@@ -2380,6 +2719,7 @@
       }
       return;
     }
+    saveLastInterviewer(p.pewawancara);
     p.ortu = computeOrtu(p);
     p.sapaan = sap(p);
     state.startErr = "";
@@ -2419,6 +2759,48 @@
   }
 
   document.addEventListener("click", function (e) {
+    // 1. Tutup dropdown combobox jika klik di luar container
+    var combobox = $("#candidate-combobox");
+    if (combobox && !combobox.contains(e.target)) {
+      closeCandidateDropdown();
+    }
+
+    // 2. Klik item calon murid di dropdown
+    var candItem = e.target.closest ? e.target.closest(".combobox-item, #btn-use-manual") : null;
+    if (candItem && candItem.getAttribute("data-candidate-id")) {
+      var cid = candItem.getAttribute("data-candidate-id");
+      selectCandidateById(cid);
+      return;
+    }
+
+    // 3. Tombol clear pencarian (✕)
+    var clearBtn = e.target.closest ? e.target.closest("#candidate-clear-btn") : null;
+    if (clearBtn) {
+      selectCandidateById("manual");
+      var inp = $("#candidate-search-input");
+      if (inp) {
+        inp.placeholder = "Ketik nama anak, ID, atau nama orang tua...";
+        inp.value = "";
+        inp.focus();
+        openCandidateDropdown("");
+      }
+      return;
+    }
+
+    // 4. Tombol chevron toggle dropdown (▾)
+    var toggleBtn = e.target.closest ? e.target.closest("#candidate-toggle-btn") : null;
+    if (toggleBtn) {
+      var dropdown = $("#candidate-dropdown");
+      if (dropdown && dropdown.style.display === "block") {
+        closeCandidateDropdown();
+      } else {
+        var inp2 = $("#candidate-search-input");
+        openCandidateDropdown(inp2 ? inp2.value : "");
+        if (inp2) inp2.focus();
+      }
+      return;
+    }
+
     var b = e.target.closest ? e.target.closest("[data-action]") : null;
     if (!b) return;
     var a = b.getAttribute("data-action");
@@ -2497,7 +2879,7 @@
       state.profile.ortu = "";
       state.profile.alamat = "";
       state.profile.anak = "";
-      state.profile.pewawancara = "";
+      state.profile.pewawancara = loadLastInterviewer() || "";
       state.activeSessionId = null;
       state.aiAnalysis = null;
       state.aiAnalysisStatus = "idle";
@@ -2802,6 +3184,358 @@
       } else {
         copyViaTextarea(waText);
       }
+    }
+  });
+
+  /* ---------- Import Calon Murid ---------- */
+  var importPreviewData = []; // Data calon murid yang sedang dipratinjau
+
+  var TEMPLATE_CSV_HEADER = "id,anak,ayah,ibu,alamat,sapaan";
+  var TEMPLATE_CSV_SAMPLE = [
+    "SANS-2027-0215,Ahmad Zaki Pratama,Bambang Hendrawan,Siti Nurhaliza,\"Jl. Danau Toba No. 12, Sawojajar, Kota Malang\",Ayah/Bunda",
+    "SANS-2027-0216,Aisyah Putri Azzahra,Muhammad Ridwan,Dewi Sartika,\"Jl. Ijen No. 45, Klojen, Kota Malang\",Ayah/Bunda",
+    "SANS-2027-0217,Fathan Al Farisi,Dedi Kusuma,Rina Anggraini,\"Jl. Soekarno Hatta No. 88, Lowokwaru, Kota Malang\",Ayah/Bunda"
+  ];
+
+  function openImportModal() {
+    importPreviewData = [];
+    var modal = $("#modal-import");
+    if (!modal) return;
+    modal.style.display = "flex";
+    setTimeout(function () { modal.classList.add("open"); }, 10);
+    var paste = $("#import-paste-text");
+    if (paste) paste.value = "";
+    var preview = $("#import-preview-area");
+    if (preview) preview.style.display = "none";
+    var errEl = $("#import-err");
+    if (errEl) errEl.style.display = "none";
+    var commitBtn = $("#btn-commit-import");
+    if (commitBtn) commitBtn.disabled = true;
+    var inp = $("#input-import-file");
+    if (inp) inp.value = "";
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function closeImportModal() {
+    var modal = $("#modal-import");
+    if (!modal) return;
+    modal.classList.remove("open");
+    setTimeout(function () { modal.style.display = "none"; }, 220);
+  }
+
+  /* ---- CSV parser (supports quoted fields) ---- */
+  function parseCsvLine(line) {
+    var result = [];
+    var cur = "";
+    var inQuote = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (ch === '"') {
+        if (inQuote && line[i + 1] === '"') { cur += '"'; i++; }
+        else { inQuote = !inQuote; }
+      } else if (ch === "," && !inQuote) {
+        result.push(cur.trim());
+        cur = "";
+      } else {
+        cur += ch;
+      }
+    }
+    result.push(cur.trim());
+    return result;
+  }
+
+  function parseCsv(text) {
+    var lines = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+    var rows = lines.map(function (l) { return parseCsvLine(l); });
+    rows = rows.filter(function (r) { return r.some(function (c) { return c !== ""; }); });
+    if (rows.length < 2) return [];
+    var header = rows[0].map(function (h) { return h.toLowerCase().replace(/\s+/g, ""); });
+    var idxId     = header.indexOf("id");
+    var idxAnak   = header.indexOf("anak");
+    var idxAyah   = header.indexOf("ayah");
+    var idxIbu    = header.indexOf("ibu");
+    var idxAlamat = header.indexOf("alamat");
+    var idxSapaan = header.indexOf("sapaan");
+    if (idxAnak === -1) { header.forEach(function (h, i) { if (/namamurid|namaanak|namalengkap|name/i.test(h)) idxAnak = i; }); }
+    if (idxAyah === -1) { header.forEach(function (h, i) { if (/ayah|bapak|father/i.test(h)) idxAyah = i; }); }
+    if (idxIbu  === -1) { header.forEach(function (h, i) { if (/ibu|bunda|mother/i.test(h)) idxIbu  = i; }); }
+    if (idxId   === -1) { idxId = 0; }
+    if (idxAnak === -1) return [];
+    var results = [];
+    for (var r = 1; r < rows.length; r++) {
+      var row = rows[r];
+      var idVal   = idxId >= 0 ? (row[idxId] || "").trim() : "";
+      var anakVal = idxAnak >= 0 ? (row[idxAnak] || "").trim() : "";
+      if (!anakVal) continue;
+      var ayah    = idxAyah >= 0 ? (row[idxAyah] || "").trim() : "";
+      var ibu     = idxIbu  >= 0 ? (row[idxIbu]  || "").trim() : "";
+      var alamat  = idxAlamat >= 0 ? (row[idxAlamat] || "").trim() : "";
+      var sapaan  = idxSapaan >= 0 ? (row[idxSapaan] || "").trim() : "Ayah/Bunda";
+      if (!sapaan) sapaan = "Ayah/Bunda";
+      var ortu = "";
+      if (ayah && ibu)   ortu = "Ayah " + ayah + " & Bunda " + ibu;
+      else if (ayah)     ortu = "Ayah " + ayah;
+      else if (ibu)      ortu = "Bunda " + ibu;
+      results.push({ id: idVal, anak: anakVal, ayah: ayah, ibu: ibu, alamat: alamat, sapaan: sapaan, ortu: ortu });
+    }
+    return results;
+  }
+
+  function parseJsonCandidates(text) {
+    var data;
+    try { data = JSON.parse(text); } catch (e) { return null; }
+    if (!Array.isArray(data)) return null;
+    var results = [];
+    data.forEach(function (row) {
+      if (!row || typeof row !== "object") return;
+      var anakVal = (row.anak || row.nama || row.name || "").toString().trim();
+      if (!anakVal) return;
+      var ayah   = (row.ayah || row.father || "").toString().trim();
+      var ibu    = (row.ibu  || row.bunda || row.mother || "").toString().trim();
+      var ortu   = (row.ortu || "").toString().trim();
+      if (!ortu) {
+        if (ayah && ibu) ortu = "Ayah " + ayah + " & Bunda " + ibu;
+        else if (ayah)   ortu = "Ayah " + ayah;
+        else if (ibu)    ortu = "Bunda " + ibu;
+      }
+      results.push({
+        id:     (row.id || "").toString().trim(),
+        anak:   anakVal,
+        ayah:   ayah,
+        ibu:    ibu,
+        alamat: (row.alamat || row.address || "").toString().trim(),
+        sapaan: (row.sapaan || "Ayah/Bunda").toString().trim() || "Ayah/Bunda",
+        ortu:   ortu
+      });
+    });
+    return results;
+  }
+
+  function parseExcelCandidates(arrayBuffer) {
+    if (!window.XLSX) return null;
+    try {
+      var wb = XLSX.read(arrayBuffer, { type: "array" });
+      var ws = wb.Sheets[wb.SheetNames[0]];
+      var rows = XLSX.utils.sheet_to_json(ws, { defval: "" });
+      var results = [];
+      rows.forEach(function (row) {
+        var norm = {};
+        Object.keys(row).forEach(function (k) { norm[k.toLowerCase().replace(/\s+/g, "")] = row[k]; });
+        var anakVal = (norm.anak || norm["namamurid"] || norm["namaanak"] || norm.name || "").toString().trim();
+        if (!anakVal) return;
+        var ayah  = (norm.ayah  || norm.bapak  || norm.father || "").toString().trim();
+        var ibu   = (norm.ibu   || norm.bunda  || norm.mother || "").toString().trim();
+        var ortu  = (norm.ortu  || "").toString().trim();
+        if (!ortu) {
+          if (ayah && ibu) ortu = "Ayah " + ayah + " & Bunda " + ibu;
+          else if (ayah)   ortu = "Ayah " + ayah;
+          else if (ibu)    ortu = "Bunda " + ibu;
+        }
+        results.push({
+          id:     (norm.id || "").toString().trim(),
+          anak:   anakVal,
+          ayah:   ayah,
+          ibu:    ibu,
+          alamat: (norm.alamat || norm.address || norm.addr || "").toString().trim(),
+          sapaan: (norm.sapaan || "Ayah/Bunda").toString().trim() || "Ayah/Bunda",
+          ortu:   ortu
+        });
+      });
+      return results;
+    } catch (e) {
+      console.warn("Excel parse error:", e);
+      return null;
+    }
+  }
+
+  function getImportMode() {
+    var radio = document.querySelector("input[name='import-mode']:checked");
+    return radio ? radio.value : "merge";
+  }
+
+  function showImportPreview(parsed) {
+    importPreviewData = parsed || [];
+    var area = $("#import-preview-area");
+    var tbody = $("#import-preview-tbody");
+    var countEl = $("#import-preview-count");
+    var commitBtn = $("#btn-commit-import");
+    var errEl = $("#import-err");
+    if (errEl) errEl.style.display = "none";
+
+    if (!parsed || parsed.length === 0) {
+      if (errEl) {
+        errEl.textContent = "Tidak ada data yang bisa dibaca. Pastikan format file sesuai template dan kolom 'anak' (nama murid) tidak kosong.";
+        errEl.style.display = "block";
+      }
+      if (area) area.style.display = "none";
+      if (commitBtn) commitBtn.disabled = true;
+      return;
+    }
+    if (countEl) countEl.textContent = "Pratinjau Data (" + parsed.length + " Calon Murid)";
+    if (tbody) {
+      tbody.innerHTML = parsed.map(function (c) {
+        return "<tr>" +
+          "<td>" + esc(c.id || "-") + "</td>" +
+          "<td>" + esc(c.anak) + "</td>" +
+          "<td>" + esc(c.ayah || "-") + "</td>" +
+          "<td>" + esc(c.ibu || "-") + "</td>" +
+          "<td title=\"" + esc(c.alamat) + "\">" + esc((c.alamat || "").slice(0, 38) + ((c.alamat || "").length > 38 ? "…" : "")) + "</td>" +
+          "</tr>";
+      }).join("");
+    }
+    if (area) area.style.display = "block";
+    if (commitBtn) commitBtn.disabled = false;
+  }
+
+  function commitImport() {
+    if (!importPreviewData || importPreviewData.length === 0) return;
+    var mode = getImportMode();
+    var added = 0, updated = 0;
+    if (mode === "replace") {
+      candidatesData = importPreviewData.slice();
+      added = candidatesData.length;
+    } else {
+      var existingMap = {};
+      candidatesData.forEach(function (c, i) { if (c.id) existingMap[c.id] = i; });
+      importPreviewData.forEach(function (c) {
+        if (c.id && existingMap[c.id] !== undefined) {
+          candidatesData[existingMap[c.id]] = c;
+          updated++;
+        } else {
+          candidatesData.push(c);
+          if (c.id) existingMap[c.id] = candidatesData.length - 1;
+          added++;
+        }
+      });
+    }
+    try { localStorage.setItem("sas-candidates-override-v1", JSON.stringify(candidatesData)); } catch (e) {}
+    closeImportModal();
+    var msg = mode === "replace"
+      ? candidatesData.length + " calon murid berhasil diimpor (semua data lama diganti)."
+      : added + " calon murid baru ditambahkan" + (updated > 0 ? ", " + updated + " diperbarui" : "") + ".";
+    alert("✅ " + msg + "\n\nData aktif di sesi ini. Untuk permanen, perbarui file candidates.json di server.");
+    if (state.tab === "interview" && state.step === 0) render();
+    var badge = $("#candidate-count-badge");
+    if (badge) badge.textContent = candidatesData.length + " kandidat";
+  }
+
+  function downloadTemplateCSV() {
+    var rows = [TEMPLATE_CSV_HEADER].concat(TEMPLATE_CSV_SAMPLE);
+    var blob = new Blob([rows.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a"); a.href = url; a.download = "template_calon_murid.csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function downloadTemplateJSON() {
+    var sample = TEMPLATE_CSV_SAMPLE.map(function (line) {
+      var c = parseCsvLine(line);
+      return { id: c[0]||"", anak: c[1]||"", ayah: c[2]||"", ibu: c[3]||"", alamat: c[4]||"", sapaan: c[5]||"Ayah/Bunda" };
+    });
+    var blob = new Blob([JSON.stringify(sample, null, 2)], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a"); a.href = url; a.download = "template_calon_murid.json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function downloadTemplateExcel() {
+    if (!window.XLSX) { alert("Library Excel belum siap, mengunduh CSV sebagai gantinya."); downloadTemplateCSV(); return; }
+    var sample = TEMPLATE_CSV_SAMPLE.map(function (line) {
+      var c = parseCsvLine(line);
+      return { id: c[0]||"", anak: c[1]||"", ayah: c[2]||"", ibu: c[3]||"", alamat: c[4]||"", sapaan: c[5]||"Ayah/Bunda" };
+    });
+    var ws = XLSX.utils.json_to_sheet(sample, { header: ["id","anak","ayah","ibu","alamat","sapaan"] });
+    ws["!cols"] = [{ wch: 20 }, { wch: 30 }, { wch: 25 }, { wch: 25 }, { wch: 50 }, { wch: 15 }];
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Calon Murid");
+    XLSX.writeFile(wb, "template_calon_murid.xlsx");
+  }
+
+  /* ---- Import modal click handlers ---- */
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest ? e.target.closest("[data-action]") : null;
+    if (btn) {
+      var act = btn.getAttribute("data-action");
+      if (act === "open-import-modal") { openImportModal(); return; }
+      if (act === "close-import-modal") { closeImportModal(); return; }
+      if (act === "download-template-csv") { downloadTemplateCSV(); return; }
+      if (act === "download-template-json") { downloadTemplateJSON(); return; }
+      if (act === "download-template-excel") { downloadTemplateExcel(); return; }
+    }
+    if (e.target && e.target.id === "btn-browse-file") { var fi = $("#input-import-file"); if (fi) fi.click(); return; }
+    if (e.target && e.target.id === "btn-commit-import") { commitImport(); return; }
+    if (e.target && e.target.id === "btn-parse-paste") {
+      var paste = $("#import-paste-text");
+      var text = paste ? paste.value.trim() : "";
+      if (!text) return;
+      var parsed = null;
+      if (text.startsWith("[") || text.startsWith("{")) parsed = parseJsonCandidates(text);
+      if (!parsed || parsed.length === 0) {
+        var tabText = text;
+        if (text.indexOf("\t") >= 0) {
+          tabText = text.split("\n").map(function (line) {
+            return line.split("\t").map(function (cell) {
+              return cell.indexOf(",") >= 0 ? '"' + cell.replace(/"/g, '""') + '"' : cell;
+            }).join(",");
+          }).join("\n");
+        }
+        parsed = parseCsv(tabText);
+      }
+      showImportPreview(parsed);
+      return;
+    }
+    if (e.target && e.target.id === "modal-import") { closeImportModal(); return; }
+  });
+
+  document.addEventListener("change", function (e) {
+    if (e.target && e.target.id === "input-import-file") {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      var name = file.name.toLowerCase();
+      var reader = new FileReader();
+      if (name.endsWith(".json")) {
+        reader.onload = function (ev) { showImportPreview(parseJsonCandidates(ev.target.result)); };
+        reader.readAsText(file);
+      } else if (name.endsWith(".csv")) {
+        reader.onload = function (ev) { showImportPreview(parseCsv(ev.target.result)); };
+        reader.readAsText(file, "utf-8");
+      } else if (name.endsWith(".xlsx") || name.endsWith(".xls")) {
+        reader.onload = function (ev) { showImportPreview(parseExcelCandidates(ev.target.result)); };
+        reader.readAsArrayBuffer(file);
+      } else {
+        var errEl = $("#import-err");
+        if (errEl) { errEl.textContent = "Format tidak didukung. Gunakan .xlsx, .csv, atau .json."; errEl.style.display = "block"; }
+      }
+    }
+  });
+
+  document.addEventListener("dragover", function (e) {
+    var dz = e.target.closest ? e.target.closest("#import-dropzone") : null;
+    if (dz) { e.preventDefault(); dz.classList.add("dragover"); }
+  });
+  document.addEventListener("dragleave", function (e) {
+    var dz = e.target.closest ? e.target.closest("#import-dropzone") : null;
+    if (dz) dz.classList.remove("dragover");
+  });
+  document.addEventListener("drop", function (e) {
+    var dz = e.target.closest ? e.target.closest("#import-dropzone") : null;
+    if (!dz) return;
+    e.preventDefault(); dz.classList.remove("dragover");
+    var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!file) return;
+    var name = file.name.toLowerCase();
+    var reader = new FileReader();
+    if (name.endsWith(".json")) {
+      reader.onload = function (ev) { showImportPreview(parseJsonCandidates(ev.target.result)); };
+      reader.readAsText(file);
+    } else if (name.endsWith(".csv")) {
+      reader.onload = function (ev) { showImportPreview(parseCsv(ev.target.result)); };
+      reader.readAsText(file, "utf-8");
+    } else if (name.endsWith(".xlsx") || name.endsWith(".xls")) {
+      reader.onload = function (ev) { showImportPreview(parseExcelCandidates(ev.target.result)); };
+      reader.readAsArrayBuffer(file);
     }
   });
 
