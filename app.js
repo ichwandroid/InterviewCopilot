@@ -1732,55 +1732,81 @@
     var res = state.aiAnalysis;
     var err = state.aiAnalysisErr;
 
+    // ── Tombol utama ──
+    var mainBtnHtml;
+    if (isL) {
+      mainBtnHtml =
+        '<button class="btn btn-primary btn-ai-cta" data-action="run-full-ai-analysis" disabled style="opacity:.85;cursor:wait;">' +
+        '<i data-lucide="loader" class="spin" style="width:20px;height:20px;"></i>' +
+        '<span>Sedang Menganalisis…</span>' +
+        '</button>';
+    } else if (!res) {
+      mainBtnHtml =
+        '<div style="text-align:center;padding:8px 0 4px;">' +
+        '<button class="btn btn-primary btn-ai-cta pulse-glow" data-action="run-full-ai-analysis">' +
+        '<i data-lucide="wand-2" style="width:22px;height:22px;"></i>' +
+        '<span>✨ Buat Analisis AI Sekarang</span>' +
+        '</button>' +
+        '<p style="margin:10px 0 0;font-size:12px;color:var(--muted);line-height:1.6;">' +
+        '🎯 Narasi Apresiasi &nbsp;·&nbsp; 📊 Peta Potensi Ananda &nbsp;·&nbsp; 📲 Draf Pesan WA Siap Kirim' +
+        '</p>' +
+        '</div>';
+    } else {
+      mainBtnHtml =
+        '<div class="row" style="gap:8px;flex-wrap:wrap;">' +
+        '<button class="btn btn-outline btn-sm" data-action="run-full-ai-analysis">' +
+        '<i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Analisis Ulang' +
+        '</button>' +
+        '<button class="btn btn-outline btn-sm" data-action="copy-wa-draft" title="Salin Draf Pesan WhatsApp untuk Orang Tua">' +
+        '<i data-lucide="copy"></i> Salin Draf WA' +
+        '</button>' +
+        '</div>';
+    }
+
     var h =
-      '<div class="card" data-anim="r" style="border-left:4px solid var(--accent,#0f766e);background:linear-gradient(to bottom, #ffffff, hsl(168 50% 99%));">' +
-      '<div class="row between" style="align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap;">' +
-      "<div>" +
-      '<span class="card-title" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-main,#0f172a);">' +
-      '<i data-lucide="sparkles" style="color:var(--accent,#0f766e);"></i> Analisis & Penguat Komprehensif AI (Gemini)' +
-      "</span>" +
-      '<p class="muted" style="font-size:13px;margin:2px 0 0;">' +
-      "Sinergi Jawaban Orang Tua + Data Sekolah + Video YouTube Profil + Instagram Resmi" +
-      "</p></div>" +
-      '<div class="row" style="gap:8px;">' +
-      '<button class="btn btn-primary btn-sm" data-action="run-full-ai-analysis"' +
-      (isL ? " disabled" : "") +
-      ">" +
-      (isL
-        ? '<i data-lucide="loader" class="spin"></i> Menganalisis…'
-        : '<i data-lucide="sparkles"></i> ' +
-          (res ? "Analisis Ulang AI" : "Buat Analisis AI")) +
-      "</button>" +
-      (res
-        ? '<button class="btn btn-outline btn-sm" data-action="copy-wa-draft" title="Salin Draf Pesan WhatsApp untuk Orang Tua"><i data-lucide="copy"></i> Salin Draf WA</button>'
-        : "") +
-      "</div></div>";
+      '<div class="card card-ai-cta" data-anim="r">' +
+      '<div class="ai-cta-header">' +
+      '<div style="display:flex;align-items:center;gap:10px;">' +
+      '<div class="ai-cta-icon-wrap"><i data-lucide="sparkles" style="width:22px;height:22px;"></i></div>' +
+      '<div>' +
+      '<div style="font-weight:700;font-size:15px;color:#0f172a;">Analisis AI Komprehensif</div>' +
+      '<div style="font-size:12px;color:#64748b;margin-top:1px;">Didukung Gemini · Data Sekolah · YouTube · Instagram</div>' +
+      '</div>' +
+      '</div>' +
+      (res ? '<span class="badge ok" style="font-size:11px;white-space:nowrap;padding:4px 10px;"><i data-lucide="check-circle-2"></i> Selesai</span>' : '') +
+      '</div>' +
+      '<div style="margin-top:' + (res ? '12' : '20') + 'px;">' +
+      mainBtnHtml +
+      '</div>';
 
     if (isL) {
       h +=
-        '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">' +
+        '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;margin-top:12px;">' +
         '<i data-lucide="loader" class="spin" style="width:22px;height:22px;margin:0 auto 10px;display:block;color:var(--accent,#0f766e);"></i>' +
         "<div>Sedang menganalisis jawaban dan meramu penguat dari profil sekolah, video YouTube, dan Instagram…</div></div>";
     } else if (err) {
       h +=
-        '<div class="notice" style="border-color:hsl(0 70% 80%);background:hsl(0 80% 98%);color:var(--danger);">' +
+        '<div class="notice" style="border-color:hsl(0 70% 80%);background:hsl(0 80% 98%);color:var(--danger);margin-top:12px;">' +
         '<i data-lucide="alert-triangle"></i> Gagal menghasilkan analisis AI: ' +
         esc(err) +
         "</div>";
     } else if (res) {
       h +=
-        '<div class="stack" style="gap:4px;">' +
+        '<div class="stack" style="gap:4px;margin-top:12px;">' +
         renderFormattedAiText(res) +
         '<div class="row" style="gap:8px;margin-top:6px;align-items:center;">' +
         '<span class="badge ok" style="font-size:11px;padding:3px 8px;"><i data-lucide="check-circle-2"></i> Analisis AI Aktif</span>' +
-        '<span class="muted" style="font-size:12px;">Didukung Data Resmi, YouTube Profil & Instagram @sdanaksalehofficial</span>' +
+        '<span class="muted" style="font-size:12px;">Didukung Data Resmi, YouTube Profil &amp; Instagram @sdanaksalehofficial</span>' +
         "</div>" +
         "</div>";
     } else {
       h +=
-        '<div style="padding:14px;background:var(--bg-subtle,#f8fafc);border-radius:var(--radius-sm,6px);border:1px dashed var(--border-subtle,#cbd5e1);font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">' +
-        '<span>Klik tombol <b>"Buat Analisis AI"</b> di atas untuk menghasilkan rangkuman keselarasan nilai, catatan wali kelas, dan draf pesan WhatsApp apresiasi.</span>' +
-        "</div>";
+        '<div style="margin-top:16px;padding:14px 16px;background:linear-gradient(135deg,hsl(168 60% 97%),hsl(220 60% 97%));border-radius:10px;border:1px dashed var(--border-subtle,#cbd5e1);font-size:13px;color:#475569;line-height:1.6;">' +
+        '<b style="color:#0f766e;">Dapatkan dalam satu klik:</b><br>' +
+        '&nbsp;&nbsp;• Narasi apresiasi orang tua yang hangat &amp; persuasif<br>' +
+        '&nbsp;&nbsp;• Peta potensi ananda sesuai nilai Sekolah Alam<br>' +
+        '&nbsp;&nbsp;• Draf pesan WhatsApp siap kirim ke orang tua' +
+        '</div>';
     }
 
     h += "</div>";

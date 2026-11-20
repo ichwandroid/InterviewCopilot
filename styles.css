@@ -948,3 +948,104 @@ summary {
     transition: none !important;
   }
 }
+
+/* ══════════════════════════════════════════════
+   AI CTA Card & Button — Attractive Design
+   ══════════════════════════════════════════════ */
+
+/* Card container */
+.card-ai-cta {
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f0fdf8 0%, #eff6ff 100%);
+  box-shadow: 0 2px 12px rgba(15,118,110,.10), 0 1px 3px rgba(15,118,110,.06);
+  overflow: hidden;
+  position: relative;
+}
+.card-ai-cta::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0f766e, #0ea5e9, #8b5cf6, #0f766e);
+  background-size: 200% 100%;
+  animation: shimmer-bar 3s linear infinite;
+}
+
+/* Header row */
+.ai-cta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Icon badge */
+.ai-cta-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0f766e, #0ea5e9);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(14,165,233,.30);
+}
+
+/* CTA button — large, gradient */
+.btn-ai-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  border-radius: 12px;
+  border: none;
+  color: #fff;
+  background: linear-gradient(135deg, #0f766e 0%, #0ea5e9 60%, #6366f1 100%);
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+  box-shadow: 0 4px 18px rgba(15,118,110,.35), 0 2px 6px rgba(15,118,110,.20);
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  white-space: nowrap;
+}
+.btn-ai-cta:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 28px rgba(15,118,110,.45), 0 4px 10px rgba(15,118,110,.25);
+}
+.btn-ai-cta:active:not(:disabled) {
+  transform: translateY(0) scale(.98);
+}
+
+/* Pulse-glow effect (only when analysis never run) */
+.btn-ai-cta.pulse-glow {
+  animation: gradient-shift 4s ease infinite, pulse-glow 2.4s ease-in-out infinite;
+}
+
+/* Keyframes */
+@keyframes gradient-shift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 4px 18px rgba(15,118,110,.35), 0 2px 6px rgba(15,118,110,.20); }
+  50%       { box-shadow: 0 6px 32px rgba(14,165,233,.55), 0 0 0 6px rgba(14,165,233,.12); }
+}
+
+@keyframes shimmer-bar {
+  0%   { background-position: 0%   0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Respect reduced-motion for the new animations */
+@media (prefers-reduced-motion: reduce) {
+  .btn-ai-cta, .btn-ai-cta.pulse-glow, .card-ai-cta::before {
+    animation: none !important;
+  }
+}
