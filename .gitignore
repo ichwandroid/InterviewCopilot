@@ -1,0 +1,14 @@
+# Private API config & credentials (JANGAN DI-COMMIT)
+api-config.js
+
+# Logs & debug files
+firebase-debug.log
+firebase-debug.*.log
+*.log
+
+# Firebase local cache
+.firebase/
+
+# OS files
+.DS_Store
+Thumbs.db

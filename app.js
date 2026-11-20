@@ -5,8 +5,8 @@
   var KEY = "sas-school-v1";
   var DEFAULT_SCHOOL = {
     v: 3,
-    name: "Sekolah Anak Saleh",
-    level: "Sekolah Dasar",
+    name: "Sekolah Alam Anak Saleh",
+    level: "Sekolah Dasar & SMP Alam",
     address: "Jl. Arumba No. 31, Tunggulwulung, Lowokwaru, Malang",
     phone: "(0341) 487088",
     website: "www.sekolahanaksaleh.sch.id",
@@ -588,15 +588,20 @@
     "- Rujukan: Siswa dilarang membawa gadget ke sekolah. Orang tua membatasi dan mengawasi penggunaan gawai di rumah (penerapan aturan 'no gadget' waktu magrib hingga isya) demi konsentrasi belajar dan kesehatan mata anak."
   ].join("\n");
 
+  var DEFAULT_GEMINI_KEYS = [];
+
   function loadGeminiKeys() {
     try {
       var raw = localStorage.getItem(KEY_GEMINI);
       if (raw) {
         var a = JSON.parse(raw);
-        if (Array.isArray(a)) return a;
+        if (Array.isArray(a) && a.length > 0) return a;
       }
     } catch (e) {}
-    return [];
+    if (window.GEMINI_CONFIG && Array.isArray(window.GEMINI_CONFIG.keys) && window.GEMINI_CONFIG.keys.length > 0) {
+      return window.GEMINI_CONFIG.keys.slice();
+    }
+    return DEFAULT_GEMINI_KEYS.slice();
   }
   function saveGeminiKeys(arr) {
     try { localStorage.setItem(KEY_GEMINI, JSON.stringify(arr)); } catch (e) {}
@@ -667,14 +672,15 @@
     }
 
     var systemText = customSystem || (
-      "Kamu adalah asisten pewawancara dan konsultan PPDB SD Anak Saleh Malang dengan kemampuan grounding dokumen seperti Google NotebookLM.\n\n" +
-      "=== SUMBER DOKUMEN SEKOLAH (GROUNDING KNOWLEDGE BASE) ===\n" +
+      "Kamu adalah Konsultan Edukasi Senior & Brand Ambassador Sekolah Alam Anak Saleh Malang (jenjang SD dan SMP Alam).\n\n" +
+      "=== SUMBER DOKUMEN & NILAI UNGGUL SEKOLAH ===\n" +
       (state.aiKnowledge || DEFAULT_KNOWLEDGE) + "\n" +
-      "==========================================================\n\n" +
-      "Petunjuk Kerja (Source Grounding ala NotebookLM):\n" +
-      "1. Jadikan dokumen rujukan sekolah di atas sebagai sumber kebenaran mutlak.\n" +
-      "2. Ketika menjawab atau menganalisis, kaitkan secara presisi dengan nomor dan butir komitmen / tata tertib yang ada di dokumen sumber.\n" +
-      "3. Gunakan gaya bahasa Indonesia yang hangat, empatik, santun, dan profesional."
+      "==============================================\n\n" +
+      "Prinsip Komunikasi & Marketing Edukasi Islami (Persuasif & Menguatkan):\n" +
+      "1. Gunakan bahasa bernada marketing edukasi yang hangat, menginspirasi, apresiatif, dan membanggakan (value-driven persuasive language). Yakinkan orang tua bahwa menyekolahkan ananda di Sekolah Alam Anak Saleh (SD & SMP) adalah keputusan terbaik, tepat waktu, dan penuh berkah bagi masa depan dunia dan akhirat ananda.\n" +
+      "2. Angkat keunikan & keunggulan Sekolah Alam: pembelajaran bermakna berbasis alam (experiential learning), penanaman tauhid dan adab sebelum ilmu, pembiasaan ibadah mandiri tanpa paksaan, lingkungan belajar ramah anak yang bebas bullying, serta kesinambungan kurikulum holistik dari jenjang SD hingga SMP Alam Anak Saleh.\n" +
+      "3. Bingkai setiap aturan dan komitmen sekolah bukan sebagai larangan kaku, melainkan sebagai bentuk perlindungan cinta, jaminan mutu pendidikan, dan komitmen sinergi terbaik antara rumah dan sekolah.\n" +
+      "4. Gunakan sapaan kekeluargaan yang santun dan memuliakan (Ayah/Bunda)."
     );
 
     for (var i = 0; i < keys.length; i++) {
@@ -698,7 +704,10 @@
         try {
           var resp = await fetch(url, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": key,
+            },
             body: JSON.stringify(requestBody),
           });
 
@@ -1570,7 +1579,9 @@
       '<option value="">-- Pilih Pewawancara --</option>' +
       INTERVIEWERS.map(function (name) {
         return (
-          "<option" +
+          '<option value="' +
+          esc(name) +
+          '"' +
           (p.pewawancara === name ? " selected" : "") +
           ">" +
           esc(name) +
@@ -1800,7 +1811,17 @@
       esc(p.anak) +
       (p.alamat ? " · Alamat: " + esc(p.alamat) : "") +
       (p.pewawancara ? " · Pewawancara: " + esc(p.pewawancara) : "") +
-      "</p></div>";
+      "</p>" +
+      '<div class="row between" style="align-items:center;flex-wrap:wrap;gap:10px;margin-top:14px;padding:12px 16px;background:var(--soft);border:1px solid var(--border);border-radius:var(--radius);">' +
+      '<div style="display:flex;align-items:center;gap:8px;">' +
+      '<span class="badge ok" style="padding:3px 8px;font-size:11.5px;"><i data-lucide="check-circle-2"></i> Hasil Sesi Tersimpan</span>' +
+      '<span class="muted" style="font-size:12.5px;">Siap mewawancarai orang tua berikutnya?</span>' +
+      "</div>" +
+      '<div class="row" style="gap:8px;">' +
+      '<button class="btn btn-primary btn-sm" data-action="restart" style="font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.15);"><i data-lucide="plus-circle"></i> + Mulai Wawancara Baru</button>' +
+      '<button class="btn btn-outline btn-sm" data-action="print"><i data-lucide="printer"></i> Cetak / PDF</button>' +
+      "</div>" +
+      "</div></div>";
     h +=
       '<div class="grid"><div class="card meter" data-anim="r"><span class="eyebrow">Harapan yang terjawab data sekolah</span>' +
       '<div class="row" style="align-items:baseline;gap:10px"><span class="display meter-num" id="meter-num" data-to="' +
@@ -1879,11 +1900,23 @@
       '<div class="row"><button class="btn btn-primary" data-action="copy" id="copy-btn"><i data-lucide="copy"></i> Salin ringkasan</button><span class="muted" id="copy-msg"></span></div></div></details>';
 
     h +=
-      '<div class="row" data-anim="r">' +
-      '<button class="btn btn-primary" data-action="print"><i data-lucide="printer"></i> Cetak / PDF</button>' +
-      '<button class="btn btn-outline" data-action="tab" data-tab="history"><i data-lucide="clipboard-list"></i> Ke Daftar Riwayat</button>' +
-      '<button class="btn btn-outline" data-action="edit-answers"><i data-lucide="edit-3"></i> Ubah jawaban</button>' +
-      '<button class="btn btn-ghost" data-action="restart"><i data-lucide="rotate-ccw"></i> Wawancara baru</button>' +
+      '<div class="card" data-anim="r" style="border:1px solid var(--border);background:var(--card);padding:18px 20px;margin-top:20px;">' +
+      '<div class="row between" style="align-items:center;flex-wrap:wrap;gap:12px;">' +
+      '<div>' +
+      '<strong style="font-size:14.5px;color:var(--foreground);display:flex;align-items:center;gap:6px;">' +
+      '<i data-lucide="check-circle" style="color:var(--primary);width:18px;height:18px;"></i> Sesi Wawancara Selesai' +
+      '</strong>' +
+      '<p class="muted" style="font-size:12px;margin:3px 0 0;">Seluruh jawaban dan hasil analisis sudah tersimpan. Klik tombol untuk memulai sesi calon murid berikutnya.</p>' +
+      '</div>' +
+      '<div class="row" style="gap:8px;flex-wrap:wrap;">' +
+      '<button class="btn btn-outline" data-action="tab" data-tab="history"><i data-lucide="clipboard-list"></i> Lihat Riwayat</button>' +
+      '<button class="btn btn-outline" data-action="edit-answers"><i data-lucide="edit-3"></i> Ubah Jawaban</button>' +
+      '<button class="btn btn-outline" data-action="print"><i data-lucide="printer"></i> Cetak / PDF</button>' +
+      '<button class="btn btn-primary" data-action="restart" style="padding:10px 18px;font-weight:600;font-size:14px;box-shadow:0 2px 10px rgba(0,0,0,0.18);">' +
+      '<i data-lucide="plus-circle"></i> + Mulai Wawancara Baru' +
+      '</button>' +
+      '</div>' +
+      '</div>' +
       '</div></div>';
     return h;
   }
@@ -2295,7 +2328,8 @@
       esc(state.searchQuery) +
       '">' +
       "</div>" +
-      '<div class="row">' +
+      '<div class="row" style="gap:8px;">' +
+      '<button class="btn btn-primary btn-sm" data-action="restart" style="font-weight:600;"><i data-lucide="plus-circle"></i> + Mulai Wawancara Baru</button>' +
       '<button class="btn btn-outline btn-sm" data-action="export-csv"><i data-lucide="file-spreadsheet"></i> Unduh Rekap Excel (CSV)</button>' +
       "</div>" +
       "</div></div>";
@@ -2649,6 +2683,7 @@
         clearBtn.style.display = t.value.trim() ? "" : "none";
       }
     } else if (t.id === "p-pew") {
+      state.profile.pewawancara = t.value;
       saveLastInterviewer(t.value);
     } else if (t.id === "p-id" || t.id === "p-anak" || t.id === "p-ayah" || t.id === "p-ibu" || t.id === "p-alamat") {
       handleCandidateAutocomplete(t);
@@ -2685,6 +2720,7 @@
       };
       reader.readAsText(t.files[0]);
     } else if (t && t.id === "p-pew") {
+      state.profile.pewawancara = t.value;
       saveLastInterviewer(t.value);
     } else if (t && (t.id === "p-id" || t.id === "p-anak" || t.id === "p-ayah" || t.id === "p-ibu" || t.id === "p-alamat")) {
       handleCandidateAutocomplete(t);
@@ -2700,6 +2736,26 @@
 
   function startInterview() {
     var p = state.profile;
+    var elPew = $("#p-pew");
+    if (elPew && elPew.value) {
+      p.pewawancara = elPew.value.trim();
+    }
+    var elAnak = $("#p-anak");
+    if (elAnak && elAnak.value) {
+      p.anak = elAnak.value.trim();
+    }
+    var elAyah = $("#p-ayah");
+    if (elAyah && elAyah.value !== undefined) {
+      p.ayah = elAyah.value.trim();
+    }
+    var elIbu = $("#p-ibu");
+    if (elIbu && elIbu.value !== undefined) {
+      p.ibu = elIbu.value.trim();
+    }
+    var elAlamat = $("#p-alamat");
+    if (elAlamat && elAlamat.value !== undefined) {
+      p.alamat = elAlamat.value.trim();
+    }
     if (!p.anak.trim()) {
       state.startErr =
         "Isi atau pilih nama calon murid terlebih dahulu.";
@@ -2885,6 +2941,7 @@
       state.aiAnalysisStatus = "idle";
       state.aiAnalysisErr = "";
       state.aiPenguat = {};
+      state.tab = "interview";
       render();
       window.scrollTo(0, 0);
     } else if (a === "copy") {
@@ -3080,15 +3137,17 @@
         if (window.lucide) lucide.createIcons();
       }
       var prompt =
-        "Kamu adalah asisten pewawancara PPDB SD Anak Saleh Malang.\n" +
-        "Pewawancara sedang mewawancarai " + sap() + " dari calon murid bernama " + (state.profile.anak || "ananda") + ".\n" +
-        "Pertanyaan: \"" + fill(q.q) + "\"\n" +
-        "Jawaban orang tua: \"" + answer + "\"\n\n" +
-        "Tugas (Grounding ala NotebookLM): Buatkan 1-2 kalimat respon lisan (talking point) penguat yang hangat, empatik, dan meyakinkan untuk langsung diucapkan pewawancara.\n" +
-        "Ketentuan:\n" +
-        "1. Kuatkan keputusan orang tua dengan mengaitkan butir komitmen atau keunggulan SD Anak Saleh dari Sumber Dokumen Sekolah.\n" +
-        "2. Sebutkan secara natural bahwa orang tua juga dapat melihat bukti dokumentasinya di video profil YouTube SD Anak Saleh atau Instagram resmi @sdanaksalehofficial jika relevan.\n" +
-        "3. Berikan HANYA kalimat siap ucap (tanpa tanda petik, tanpa kata pengantar).";
+        "Kamu adalah Konsultan PPDB & Edukator Ahli Sekolah Alam Anak Saleh Malang (SD & SMP Alam).\n" +
+        "Pewawancara sedang berdialog langsung dengan " + sap() + " dari calon murid bernama " + (state.profile.anak || "ananda") + ".\n" +
+        "Pertanyaan wawancara: \"" + fill(q.q) + "\"\n" +
+        "Jawaban " + sap() + ": \"" + answer + "\"\n\n" +
+        "Tugas: Buatkan 1-2 kalimat respon lisan (talking point) penguat yang SANGAT MEYAKINKAN, BERGAYA MARKETING EDUKASI ISLAMI, HANGAT, DAN MEMBANGGAKAN untuk langsung diucapkan pewawancara kepada orang tua.\n" +
+        "Panduan Respon:\n" +
+        "1. Validasi & puji niat baik orang tua (contoh: 'MasyaAllah, kepedulian dan visi Ayah/Bunda sangat luar biasa dan selaras sempurna...').\n" +
+        "2. Tonjolkan bagaimana ekosistem Sekolah Alam Anak Saleh (SD & SMP) mewujudkan harapan tersebut melalui belajar bermakna bersama alam, pengawalan ibadah, dan pembentukan karakter tangguh.\n" +
+        "3. Tautkan secara natural bukti dokumentasi pembiasaan nyata di video profil YouTube SD Anak Saleh atau Instagram resmi @sdanaksalehofficial jika relevan.\n" +
+        "4. Tanamkan rasa tenang dan keyakinan mantap bahwa ananda berada di tempat yang paling tepat untuk bertumbuh bahagia.\n" +
+        "5. Berikan HANYA kalimat siap ucap (tanpa tanda petik, tanpa kata pengantar).";
 
       callGemini(prompt)
         .then(function (res) {
@@ -3129,9 +3188,9 @@
       }).join("\n\n");
 
       var promptFull =
-        "Kamu adalah konsultan ahli PPDB SD Anak Saleh Malang dengan kemampuan grounding seperti Google NotebookLM.\n" +
-        "Lakukan analisis mendalam atas hasil wawancara calon orang tua murid dengan MEMBANDINGKAN DAN MENCOCOKKAN JAWABAN ORANG TUA TERHADAP SUMBER DOKUMEN SEKOLAH.\n\n" +
-        "Calon Murid: " +
+        "Kamu adalah Konsultan Ahli Komunikasi & Edukasi PPDB Sekolah Alam Anak Saleh Malang (SD & SMP Alam).\n" +
+        "Susunlah ANALISIS KOMPREHENSIF BERGAYA MARKETING EDUKASI PERSUASIF (PERSUASIVE VALUE-DRIVEN REPORT) berdasarkan hasil wawancara calon orang tua murid untuk menguatkan keyakinan keluarga dalam mendaftarkan ananda ke Sekolah Alam Anak Saleh (SD maupun lanjutan SMP Alam).\n\n" +
+        "Data Calon Murid: " +
         (state.profile.anak || "-") +
         "\n" +
         "Orang Tua: " +
@@ -3145,19 +3204,19 @@
         "Pewawancara: " +
         (state.profile.pewawancara || "-") +
         "\n\n" +
-        "Tanya Jawab Wawancara:\n" +
+        "Rekap Jawaban Wawancara:\n" +
         summaryAll +
         "\n\n" +
-        "Media Resmi Sekolah:\n" +
+        "Kanal Media Sekolah:\n" +
         "- Video Profil YouTube: " + (state.school.youtube || "https://youtu.be/Wttuw8v2-ME") + "\n" +
         "- Akun Instagram Resmi: " + (state.school.instagram || "https://www.instagram.com/sdanaksalehofficial/") + "\n\n" +
         "Format Output (Wajib ikuti persis 3 bagian di bawah dengan heading markdown ###):\n\n" +
-        "### 1. Narasi Profil & Keselarasan dengan Dokumen Sekolah (NotebookLM Grounding)\n" +
-        "(1-2 paragraf hangat tentang keselarasan harapan orang tua dengan iklim belajar di SD Anak Saleh. Sebutkan secara eksplisit butir komitmen atau aturan sekolah yang sangat selaras dari Dokumen Sumber, misal [Butir 1: Bijak Medsos], [Butir 4: Ibadah Harian], dll.)\n\n" +
-        "### 2. Catatan Khusus & Rekomendasi untuk Wali Kelas / Tim PPDB\n" +
-        "(3-4 poin rekomendasi konkret mengenai potensi anak, hal yang perlu ditegaskan bersama orang tua sesuai aturan sekolah, serta pendampingan awal masuk sekolah)\n\n" +
-        "### 3. Draf Pesan WhatsApp Apresiasi untuk Orang Tua\n" +
-        "(Draf pesan WhatsApp ramah dan islami untuk dikirimkan pewawancara kepada orang tua. Ucapkan terima kasih, tegaskan komitmen sinergi, serta sertakan link video profil YouTube " + (state.school.youtube || "https://youtu.be/Wttuw8v2-ME") + " dan Instagram " + (state.school.instagram || "https://www.instagram.com/sdanaksalehofficial/") + " agar keluarga bisa melihat dokumentasi pembiasaan sekolah bersama di rumah)";
+        "### 1. Narasi Apresiasi & Keselarasan Visi Unggul (Mengapa Sekolah Alam Anak Saleh Pilihan Terbaik)\n" +
+        "(Tuliskan 2 paragraf bernas dan inspiratif bergaya marketing edukasi: apresiasi mendalam atas visi orang tua dan uraikan betapa selarasnya potensi ananda dengan kurikulum holistik Sekolah Alam Anak Saleh. Gambarkan lingkungan belajar yang membahagiakan, eksploratif berbasis alam, dan pembiasaan adab islami yang mempersiapkan ananda tumbuh percaya diri sejak SD hingga siap berprestasi di jenjang SMP Alam Anak Saleh. Kaitkan secara elegan dengan butir komitmen sekolah sebagai jaminan mutu pendidikan.)\n\n" +
+        "### 2. Peta Potensi Ananda & Komitmen Pendampingan Emas (SD hingga SMP Alam)\n" +
+        "(Tuliskan 3-4 poin rekomendasi konkret dan memotivasi untuk wali kelas dan tim pendidik: soroti keistimewaan fitrah ananda, strategi pendampingan guru dalam menumbuhkan kecintaan ibadah & adab tanpa bullying, serta kesiapan kesinambungan pembinaan karakter menuju jenjang SMP Alam Anak Saleh.)\n\n" +
+        "### 3. Draf Pesan WhatsApp Apresiasi & Penguat Keputusan (Closing Persuasif)\n" +
+        "(Susun draf pesan WhatsApp ramah, islami, elegan, dan sangat meyakinkan dari pewawancara/manajemen untuk dikirimkan kepada orang tua. Ucapkan terima kasih dan doa keberkahan, tegaskan kebanggaan sekolah menyambut ananda ke dalam keluarga besar Sekolah Alam Anak Saleh, serta sematkan tautan video profil YouTube " + (state.school.youtube || "https://youtu.be/Wttuw8v2-ME") + " dan Instagram " + (state.school.instagram || "https://www.instagram.com/sdanaksalehofficial/") + " agar seluruh keluarga besar semakin mantap menuntaskan proses pendaftaran.)";
 
       callGemini(promptFull)
         .then(function (text) {
